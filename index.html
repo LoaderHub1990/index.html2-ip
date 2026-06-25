@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discord Voice Bot Manager</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
+<style>
+  :root {
+    --bg: #0e0f17;
+    --bg2: #13141f;
+    --bg3: #1a1b2e;
+    --bg4: #1f2035;
+    --card: #161724;
+    --card2: #1c1d30;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --purple: #7c6ff7;
+    --purple2: #a89cf7;
+    --purple-dim: rgba(124,111,247,0.12);
+    --purple-glow: rgba(124,111,247,0.25);
+    --green: #3dd68c;
+    --green-dim: rgba(61,214,140,0.12);
+    --red: #f25656;
+    --red-dim: rgba(242,86,86,0.12);
+    --amber: #f5a623;
+    --amber-dim: rgba(245,166,35,0.12);
+    --text: #e8e9f4;
+    --text2: #8b8fa8;
+    --text3: #5a5e75;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BACKGROUND AMBIENT */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; left: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(124,111,247,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -200px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(61,214,140,0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* LAYOUT */
+  .app { position: relative; z-index: 1; display: flex; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 10;
+  }
+  .sidebar-logo {
+    padding: 24px 20px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--purple), #5b52d8);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .logo-text { font-size: 15px; font-weight: 600; color: var(--text); }
+  .logo-sub { font-size: 10px; color: var(--text3); letter-spacing: 1.2px; text-transform: uppercase; }
+
+  .sidebar-nav { padding: 12px 10px; flex: 1; }
+  .nav-label { font-size: 10px; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 10px 4px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 10px;
+    border-radius: var(--radius-sm);
+    color: var(--text2);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+    user-select: none;
+  }
+  .nav-item:hover { background: var(--bg4); color: var(--text); }
+  .nav-item.active { background: var(--purple-dim); color: var(--purple2); }
+  .nav-item i { font-size: 17px; }
+  .nav-badge {
+    margin-left: auto;
+    background: var(--purple-dim);
+    color: var(--purple2);
+    font-size: 11px;
+    padding: 1px 7px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .nav-badge.green { background: var(--green-dim); color: var(--green); }
+
+  .sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text3);
+    text-align: center;
+  }
+  .sidebar-footer a { color: var(--purple); text-decoration: none; }
+
+  /* MAIN */
+  .main { margin-left: 240px; flex: 1; min-height: 100vh; }
+
+  /* TOPBAR */
+  .topbar {
+    height: 60px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 12px;
+    position: sticky;
+    top: 0; z-index: 9;
+  }
+  .topbar-title { font-size: 16px; font-weight: 600; flex: 1; }
+  .topbar-sub { font-size: 13px; color: var(--text2); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn i { font-size: 16px; }
+  .btn-primary {
+    background: var(--purple);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #6a63e0; }
+  .btn-outline {
+    background: transparent;
+    color: var(--text2);
+    border: 1px solid var(--border2);
+  }
+  .btn-outline:hover { background: var(--bg4); color: var(--text); }
+  .btn-success {
+    background: var(--green-dim);
+    color: var(--green);
+    border: 1px solid rgba(61,214,140,0.25);
+  }
+  .btn-success:hover { background: rgba(61,214,140,0.2); }
+  .btn-danger {
+    background: var(--red-dim);
+    color: var(--red);
+    border: 1px solid rgba(242,86,86,0.25);
+  }
+  .btn-danger:hover { background: rgba(242,86,86,0.2); }
+  .btn-sm { padding: 5px 11px; font-size: 12px; }
+  .btn-icon { padding: 8px; }
+
+  /* CONTENT */
+  .content { padding: 28px; }
+
+  /* STATS ROW */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .stat-icon {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .stat-icon.purple { background: var(--purple-dim); color: var(--purple2); }
+  .stat-icon.green { background: var(--green-dim); color: var(--green); }
+  .stat-icon.amber { background: var(--amber-dim); color: var(--amber); }
+  .stat-icon.red { background: var(--red-dim); color: var(--red); }
+  .stat-label { font-size: 12px; color: var(--text3); margin-bottom: 3px; }
+  .stat-val { font-size: 22px; font-weight: 700; }
+  .stat-val.purple { color: var(--purple2); }
+  .stat-val.green { color: var(--green); }
+  .stat-val.amber { color: var(--amber); }
+  .stat-val.red { color: var(--red); }
+
+  /* SECTION */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .section-title { font-size: 15px; font-weight: 600; }
+  .section-sub { font-size: 13px; color: var(--text2); margin-top: 1px; }
+
+  /* BOT CARDS */
+  .bots-grid {
+    display: grid;
+    gap: 14px;
+  }
+  .bot-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    transition: border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .bot-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 3px 0 0 3px;
+    background: var(--border2);
+    transition: background 0.2s;
+  }
+  .bot-card.running::before { background: var(--green); }
+  .bot-card.stopped::before { background: var(--text3); }
+  .bot-card.connecting::before { background: var(--amber); }
+
+  .bot-card:hover { border-color: var(--border2); }
+
+  .bot-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .bot-avatar {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple), #5b52d8);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .bot-avatar-img {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .status-dot {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--card);
+    background: var(--text3);
+  }
+  .status-dot.online { background: var(--green); }
+  .status-dot.connecting { background: var(--amber); }
+  .status-dot.offline { background: var(--text3); }
+
+  .bot-info { flex: 1; min-width: 0; }
+  .bot-name { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bot-id { font-size: 12px; color: var(--text3); margin-top: 1px; }
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .status-badge.running { background: var(--green-dim); color: var(--green); }
+  .status-badge.stopped { background: rgba(255,255,255,0.05); color: var(--text3); }
+  .status-badge.connecting { background: var(--amber-dim); color: var(--amber); }
+  .status-badge .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+  .bot-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .bot-field {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+  }
+  .bot-field-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px; }
+  .bot-field-val {
+    font-size: 13px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bot-field-val.token { font-family: monospace; color: var(--purple2); }
+  .bot-field-val.empty { color: var(--text3); font-style: italic; }
+
+  .bot-actions { display: flex; gap: 8px; align-items: center; }
+  .bot-uptime { margin-left: auto; font-size: 12px; color: var(--text3); }
+
+  /* LOG BOX */
+  .log-box {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-top: 12px;
+    font-family: 'Consolas', monospace;
+    font-size: 12px;
+    max-height: 100px;
+    overflow-y: auto;
+    display: none;
+  }
+  .log-box.visible { display: block; }
+  .log-line { color: var(--text2); padding: 1px 0; }
+  .log-line.info { color: var(--purple2); }
+  .log-line.ok { color: var(--green); }
+  .log-line.warn { color: var(--amber); }
+  .log-line.err { color: var(--red); }
+  .log-line span { color: var(--text3); margin-right: 8px; }
+
+  /* MODAL */
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-backdrop.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 540px;
+    box-shadow: var(--shadow);
+    transform: translateY(16px);
+    transition: transform 0.2s;
+  }
+  .modal-backdrop.open .modal { transform: translateY(0); }
+  .modal-header {
+    padding: 22px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .modal-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: var(--purple-dim);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--purple2);
+    font-size: 18px;
+  }
+  .modal-title { font-size: 16px; font-weight: 600; }
+  .modal-sub { font-size: 13px; color: var(--text2); }
+  .modal-close {
+    margin-left: auto;
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    border: none;
+    color: var(--text2);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    transition: all 0.15s;
+  }
+  .modal-close:hover { background: var(--bg4); color: var(--text); }
+  .modal-body { padding: 20px 24px; }
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex; gap: 10px; justify-content: flex-end;
+  }
+
+  /* FORM */
+  .form-group { margin-bottom: 16px; }
+  .form-label {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text2);
+    margin-bottom: 7px;
+  }
+  .form-label i { font-size: 15px; }
+  .form-hint { font-size: 11px; color: var(--text3); margin-top: 5px; }
+  .form-required { color: var(--red); font-size: 11px; }
+  input[type="text"], input[type="password"], select, textarea {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    color: var(--text);
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+    appearance: none;
+  }
+  input[type="text"]:focus, input[type="password"]:focus, select:focus, textarea:focus {
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px var(--purple-dim);
+  }
+  input::placeholder { color: var(--text3); }
+  select option { background: var(--bg2); }
+  .input-icon-wrap { position: relative; }
+  .input-icon-wrap i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 15px; pointer-events: none; }
+  .input-icon-wrap input { padding-left: 36px; }
+  .input-toggle {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; color: var(--text3); cursor: pointer; font-size: 16px; padding: 0;
+    display: flex; align-items: center;
+  }
+  .input-toggle:hover { color: var(--text); }
+
+  /* TABS */
+  .tabs {
+    display: flex; gap: 4px;
+    background: var(--bg3);
+    border-radius: var(--radius-sm);
+    padding: 4px;
+    margin-bottom: 20px;
+  }
+  .tab {
+    flex: 1; padding: 8px; text-align: center;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--text2);
+    transition: all 0.15s;
+  }
+  .tab.active { background: var(--purple-dim); color: var(--purple2); font-weight: 500; }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 60px 24px;
+    color: var(--text3);
+  }
+  .empty-state i { font-size: 48px; margin-bottom: 14px; display: block; opacity: 0.4; }
+  .empty-state h3 { font-size: 16px; color: var(--text2); margin-bottom: 8px; }
+  .empty-state p { font-size: 13px; line-height: 1.6; }
+
+  /* TOAST */
+  .toast-container {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    z-index: 200;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .toast {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px;
+    min-width: 280px;
+    box-shadow: var(--shadow);
+    animation: slideIn 0.25s ease;
+  }
+  .toast.success { border-left: 3px solid var(--green); }
+  .toast.error { border-left: 3px solid var(--red); }
+  .toast.info { border-left: 3px solid var(--purple); }
+  .toast i { font-size: 18px; }
+  .toast.success i { color: var(--green); }
+  .toast.error i { color: var(--red); }
+  .toast.info i { color: var(--purple2); }
+  @keyframes slideIn { from { opacity:0; transform: translateX(40px); } to { opacity:1; transform: translateX(0); } }
+
+  /* CONFIRM DIALOG */
+  .confirm-dialog {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 300;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  }
+  .confirm-dialog.open { opacity:1; pointer-events:all; }
+  .confirm-box {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 14px;
+    padding: 28px;
+    max-width: 380px;
+    width: 100%;
+    transform: scale(0.95);
+    transition: transform 0.2s;
+  }
+  .confirm-dialog.open .confirm-box { transform: scale(1); }
+  .confirm-icon { font-size: 36px; margin-bottom: 12px; color: var(--red); }
+  .confirm-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  .confirm-msg { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 20px; }
+  .confirm-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+  /* ACTIVITY LOG PAGE */
+  .log-page { display: none; }
+  .log-page.active { display: block; }
+  .log-table-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .log-row {
+    display: grid;
+    grid-template-columns: 130px 100px 1fr;
+    padding: 10px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    gap: 16px;
+    align-items: center;
+  }
+  .log-row:last-child { border-bottom: none; }
+  .log-row.header { background: var(--bg3); font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; }
+  .log-type-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .log-type-badge.join { background: var(--green-dim); color: var(--green); }
+  .log-type-badge.leave { background: var(--red-dim); color: var(--red); }
+  .log-type-badge.error { background: var(--red-dim); color: var(--red); }
+  .log-type-badge.info { background: var(--purple-dim); color: var(--purple2); }
+
+  /* SETTINGS PAGE */
+  .settings-page { display: none; }
+  .settings-page.active { display: block; }
+  .settings-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+  .settings-section-title { font-size: 14px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .settings-section-title i { color: var(--purple2); font-size: 18px; }
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .toggle-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .toggle-label { font-size: 14px; }
+  .toggle-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
+  .toggle {
+    width: 42px; height: 22px;
+    background: var(--border2);
+    border-radius: 11px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .toggle.on { background: var(--purple); }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    top: 3px; left: 3px;
+    transition: transform 0.2s;
+  }
+  .toggle.on::after { transform: translateX(20px); }
+
+  /* BOTS PAGE */
+  .bots-page { display: block; }
+  .bots-page.hidden { display: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .sidebar { width: 200px; }
+    .main { margin-left: 200px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 680px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .bot-fields { grid-template-columns: 1fr; }
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+  .pulse { animation: pulse 2s infinite; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🎙️</div>
+      <div>
+        <div class="logo-text">VoiceBot Hub</div>
+        <div class="logo-sub">Discord Manager</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">จัดการ</div>
+      <div class="nav-item active" onclick="showPage('bots')" id="nav-bots">
+        <i class="ti ti-robot"></i> บอทของฉัน
+        <span class="nav-badge green" id="nav-online-count">0</span>
+      </div>
+      <div class="nav-item" onclick="showPage('activity')" id="nav-activity">
+        <i class="ti ti-activity"></i> ประวัติกิจกรรม
+        <span class="nav-badge" id="nav-log-count">0</span>
+      </div>
+      <div class="nav-label">ระบบ</div>
+      <div class="nav-item" onclick="showPage('settings')" id="nav-settings">
+        <i class="ti ti-settings"></i> ตั้งค่า
+      </div>
+      <div class="nav-item" onclick="openDocs()">
+        <i class="ti ti-book"></i> คู่มือการใช้งาน
+        <i class="ti ti-external-link" style="margin-left:auto;font-size:13px;opacity:0.5"></i>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      VoiceBot Hub v1.0<br>
+      <a href="https://github.com" target="_blank">Deploy on GitHub Pages</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="page-title">บอทของฉัน</div>
+        <div class="topbar-sub" id="page-sub">จัดการบอท Discord Voice Channel ทั้งหมด</div>
+      </div>
+      <div id="topbar-actions">
+        <button class="btn btn-primary" onclick="openAddModal()">
+          <i class="ti ti-plus"></i> เพิ่มบอท
+        </button>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- STATS -->
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon purple"><i class="ti ti-robot"></i></div>
+          <div>
+            <div class="stat-label">บอททั้งหมด</div>
+            <div class="stat-val purple" id="stat-total">0</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="ti ti-volume"></i></div>
+          <div>
+            <div class="stat-label">กำลังออนไลน์</div>
+            <div class="stat-val green" id="stat-online">0</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon amber"><i class="ti ti-clock"></i></div>
+          <div>
+            <div class="stat-label">กำลังเชื่อมต่อ</div>
+            <div class="stat-val amber" id="stat-connecting">0</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red"><i class="ti ti-player-stop"></i></div>
+          <div>
+            <div class="stat-label">หยุดทำงาน</div>
+            <div class="stat-val red" id="stat-stopped">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTS PAGE -->
+      <div class="bots-page" id="bots-page">
+        <div class="section-header">
+          <div>
+            <div class="section-title">รายการบอท</div>
+            <div class="section-sub">คลิก <strong>เริ่ม</strong> เพื่อให้บอทเข้าช่องเสียง</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn btn-outline btn-sm" onclick="startAllBots()"><i class="ti ti-player-play"></i> เริ่มทั้งหมด</button>
+            <button class="btn btn-outline btn-sm" onclick="stopAllBots()"><i class="ti ti-player-stop"></i> หยุดทั้งหมด</button>
+          </div>
+        </div>
+        <div class="bots-grid" id="bots-grid">
+          <!-- empty state -->
+          <div class="empty-state" id="empty-state">
+            <i class="ti ti-robot"></i>
+            <h3>ยังไม่มีบอท</h3>
+            <p>กดปุ่ม <strong>เพิ่มบอท</strong> เพื่อเพิ่มบอท Discord<br>ของคุณเข้ามาในระบบ</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVITY PAGE -->
+      <div class="log-page" id="activity-page">
+        <div class="section-header">
+          <div>
+            <div class="section-title">ประวัติกิจกรรม</div>
+            <div class="section-sub">บันทึกการเชื่อมต่อและเหตุการณ์ทั้งหมด</div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="clearLog()"><i class="ti ti-trash"></i> ล้างประวัติ</button>
+        </div>
+        <div class="log-table-wrap">
+          <div class="log-row header">
+            <div>เวลา</div>
+            <div>ประเภท</div>
+            <div>รายละเอียด</div>
+          </div>
+          <div id="activity-log-body">
+            <div style="text-align:center;padding:40px;color:var(--text3);font-size:13px;">
+              <i class="ti ti-file-description" style="font-size:32px;display:block;margin-bottom:10px;opacity:0.3"></i>
+              ยังไม่มีประวัติกิจกรรม
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS PAGE -->
+      <div class="settings-page" id="settings-page">
+        <div class="settings-section">
+          <div class="settings-section-title"><i class="ti ti-bell"></i> การแจ้งเตือน</div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">แจ้งเตือนเมื่อบอทออนไลน์</div>
+              <div class="toggle-sub">แสดง notification เมื่อบอทเชื่อมต่อสำเร็จ</div>
+            </div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">แจ้งเตือนเมื่อบอทหลุด</div>
+              <div class="toggle-sub">แจ้งเตือนเมื่อบอทหลุดจากช่องเสียง</div>
+            </div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">เชื่อมต่อใหม่อัตโนมัติ</div>
+              <div class="toggle-sub">พยายามเชื่อมต่อใหม่เมื่อหลุด</div>
+            </div>
+            <div class="toggle" onclick="this.classList.toggle('on')"></div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title"><i class="ti ti-lock"></i> ความปลอดภัย</div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">ซ่อนโทเคนเสมอ</div>
+              <div class="toggle-sub">ปิดบังโทเคนในหน้าบอท</div>
+            </div>
+            <div class="toggle on" id="hide-token-toggle" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">บันทึกข้อมูลในเบราว์เซอร์</div>
+              <div class="toggle-sub">เก็บข้อมูลบอทใน localStorage (เฉพาะเครื่อง)</div>
+            </div>
+            <div class="toggle on" id="localstorage-toggle" onclick="toggleLocalStorage(this)"></div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title"><i class="ti ti-database"></i> ข้อมูล</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+            <button class="btn btn-outline btn-sm" onclick="exportData()"><i class="ti ti-download"></i> Export JSON</button>
+            <button class="btn btn-outline btn-sm" onclick="document.getElementById('import-input').click()"><i class="ti ti-upload"></i> Import JSON</button>
+            <input type="file" id="import-input" accept=".json" style="display:none" onchange="importData(event)">
+          </div>
+          <p style="font-size:12px;color:var(--text3);line-height:1.7">
+            ข้อมูลทั้งหมดจะถูกเก็บไว้ในเบราว์เซอร์เท่านั้น ไม่มีการส่งข้อมูลไปยังเซิร์ฟเวอร์ภายนอก<br>
+            แนะนำ Export สำรองข้อมูลไว้เป็นระยะ
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-backdrop" id="bot-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon"><i class="ti ti-robot"></i></div>
+      <div>
+        <div class="modal-title" id="modal-title">เพิ่มบอทใหม่</div>
+        <div class="modal-sub">กรอกข้อมูลบอท Discord ของคุณ</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="tabs" id="modal-tabs">
+        <div class="tab active" onclick="switchTab('bot')">🤖 บอท</div>
+        <div class="tab" onclick="switchTab('channel')">🔊 ช่องเสียง</div>
+      </div>
+
+      <!-- BOT TAB -->
+      <div id="tab-bot">
+        <div class="form-group">
+          <label class="form-label"><i class="ti ti-id-badge"></i> ชื่อบอท (แสดงผล) <span class="form-required">*</span></label>
+          <input type="text" id="bot-name-input" placeholder="เช่น Music Bot #1">
+        </div>
+        <div class="form-group">
+          <label class="form-label"><i class="ti ti-key"></i> Bot Token <span class="form-required">*</span></label>
+          <div class="input-icon-wrap">
+            <i class="ti ti-lock"></i>
+            <input type="password" id="bot-token-input" placeholder="MTEx...xxxx.xxxxxx.xxxxxxxxxxxxxxxxxxxxxxx">
+            <button class="input-toggle" id="toggle-token-btn" onclick="toggleTokenVisible()"><i class="ti ti-eye" id="token-eye-icon"></i></button>
+          </div>
+          <div class="form-hint">หาได้จาก <strong>Discord Developer Portal → Bot → Token</strong></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><i class="ti ti-server"></i> Server ID (Guild ID) <span class="form-required">*</span></label>
+          <input type="text" id="bot-guild-input" placeholder="เช่น 123456789012345678">
+          <div class="form-hint">คลิกขวาที่เซิร์ฟเวอร์ → Copy Server ID (เปิด Developer Mode ก่อน)</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><i class="ti ti-note"></i> หมายเหตุ (ไม่บังคับ)</label>
+          <input type="text" id="bot-note-input" placeholder="เช่น บอทสำหรับห้อง Gaming">
+        </div>
+      </div>
+
+      <!-- CHANNEL TAB -->
+      <div id="tab-channel" style="display:none">
+        <div class="form-group">
+          <label class="form-label"><i class="ti ti-volume"></i> Voice Channel ID <span class="form-required">*</span></label>
+          <input type="text" id="bot-channel-input" placeholder="เช่น 987654321098765432">
+          <div class="form-hint">คลิกขวาที่ช่องเสียง → Copy Channel ID</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><i class="ti ti-microphone-off"></i> Mute บอท (Self Mute)</label>
+          <select id="bot-mute-input">
+            <option value="true">ปิดเสียง (Self Mute)</option>
+            <option value="false">เปิดเสียง</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><i class="ti ti-headphones-off"></i> Deafen บอท (Self Deaf)</label>
+          <select id="bot-deaf-input">
+            <option value="true">ปิดหูฟัง (Self Deaf)</option>
+            <option value="false">ไม่ปิด</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveBot()"><i class="ti ti-check"></i> <span id="save-btn-label">เพิ่มบอท</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DIALOG -->
+<div class="confirm-dialog" id="confirm-dialog">
+  <div class="confirm-box">
+    <div class="confirm-icon"><i class="ti ti-alert-triangle" id="confirm-icon"></i></div>
+    <div class="confirm-title" id="confirm-title">ยืนยันการลบ</div>
+    <div class="confirm-msg" id="confirm-msg">คุณต้องการลบบอทนี้ใช่หรือไม่?</div>
+    <div class="confirm-actions">
+      <button class="btn btn-outline" onclick="closeConfirm()">ยกเลิก</button>
+      <button class="btn btn-danger" id="confirm-ok-btn" onclick="confirmOk()">ลบ</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+/* ============================
+   DATA STORE
+   ============================ */
+let bots = [];
+let activityLog = [];
+let editingId = null;
+let confirmCallback = null;
+let uptimeIntervals = {};
+
+function genId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}
+
+function loadFromStorage() {
+  try {
+    const saved = localStorage.getItem('voicebot_hub_bots');
+    if (saved) bots = JSON.parse(saved);
+    bots.forEach(b => { b.status = 'stopped'; b.uptime = 0; });
+    const log = localStorage.getItem('voicebot_hub_log');
+    if (log) activityLog = JSON.parse(log);
+  } catch(e) {}
+}
+
+function saveToStorage() {
+  try {
+    localStorage.setItem('voicebot_hub_bots', JSON.stringify(bots));
+    localStorage.setItem('voicebot_hub_log', JSON.stringify(activityLog.slice(0, 200)));
+  } catch(e) {}
+}
+
+/* ============================
+   PAGE ROUTING
+   ============================ */
+let currentPage = 'bots';
+
+function showPage(page) {
+  currentPage = page;
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('nav-' + page)?.classList.add('active');
+
+  document.getElementById('bots-page').style.display = page === 'bots' ? 'block' : 'none';
+  document.getElementById('activity-page').style.display = page === 'activity' ? 'block' : 'none';
+  document.getElementById('settings-page').style.display = page === 'settings' ? 'block' : 'none';
+  document.getElementById('stats-grid').style.display = page === 'bots' ? '' : 'none';
+
+  const titles = {
+    bots: ['บอทของฉัน', 'จัดการบอท Discord Voice Channel ทั้งหมด'],
+    activity: ['ประวัติกิจกรรม', 'บันทึกการเชื่อมต่อและเหตุการณ์'],
+    settings: ['ตั้งค่า', 'กำหนดค่าระบบและความปลอดภัย']
+  };
+  document.getElementById('page-title').textContent = titles[page][0];
+  document.getElementById('page-sub').textContent = titles[page][1];
+  document.getElementById('topbar-actions').style.display = page === 'bots' ? '' : 'none';
+  if(page === 'activity') renderActivityLog();
+}
+
+/* ============================
+   BOT RENDERING
+   ============================ */
+function getInitials(name) {
+  return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+}
+function maskToken(token) {
+  if (!token) return '-';
+  if (token.length < 12) return '••••••••';
+  return token.slice(0, 8) + '•'.repeat(10) + token.slice(-4);
+}
+function formatUptime(s) {
+  if (s < 60) return s + 'วิ';
+  if (s < 3600) return Math.floor(s/60) + 'น.';
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60);
+  return h + 'ชม.' + (m ? m + 'น.' : '');
+}
+
+function renderBots() {
+  const grid = document.getElementById('bots-grid');
+  const empty = document.getElementById('empty-state');
+  updateStats();
+
+  if (bots.length === 0) {
+    empty.style.display = '';
+    grid.innerHTML = '';
+    grid.appendChild(empty);
+    return;
+  }
+  empty.style.display = 'none';
+
+  const cards = bots.map(bot => {
+    const statusClass = bot.status || 'stopped';
+    const statusLabel = { running: '🟢 ออนไลน์', stopped: '⚫ หยุด', connecting: '🟡 กำลังเชื่อมต่อ' }[statusClass] || 'หยุด';
+    const initials = getInitials(bot.name);
+    const dotClass = { running: 'online', stopped: 'offline', connecting: 'connecting' }[statusClass];
+    const uptime = bot.uptime > 0 ? formatUptime(bot.uptime) : null;
+
+    return `
+    <div class="bot-card ${statusClass}" id="bot-card-${bot.id}">
+      <div class="bot-header">
+        <div class="bot-avatar" style="background:${stringToColor(bot.name)}">
+          ${initials}
+          <div class="status-dot ${dotClass}"></div>
+        </div>
+        <div class="bot-info">
+          <div class="bot-name">${escHtml(bot.name)}</div>
+          <div class="bot-id">${bot.guildId ? 'Guild: ' + bot.guildId : 'ยังไม่ได้ตั้งค่า'}</div>
+        </div>
+        <div class="status-badge ${statusClass}">
+          <div class="dot ${statusClass === 'connecting' ? 'pulse' : ''}"></div>
+          ${statusLabel}
+        </div>
+      </div>
+
+      <div class="bot-fields">
+        <div class="bot-field">
+          <div class="bot-field-label">🔑 Bot Token</div>
+          <div class="bot-field-val token">${maskToken(bot.token)}</div>
+        </div>
+        <div class="bot-field">
+          <div class="bot-field-label">🔊 Voice Channel</div>
+          <div class="bot-field-val ${bot.channelId ? '' : 'empty'}">${bot.channelId ? bot.channelId : 'ยังไม่ได้ระบุ'}</div>
+        </div>
+        <div class="bot-field">
+          <div class="bot-field-label">🔇 Mute</div>
+          <div class="bot-field-val">${bot.selfMute === 'false' ? 'เปิดเสียง' : 'ปิดเสียง'}</div>
+        </div>
+        <div class="bot-field">
+          <div class="bot-field-label">📝 หมายเหตุ</div>
+          <div class="bot-field-val ${bot.note ? '' : 'empty'}">${bot.note ? escHtml(bot.note) : 'ไม่มี'}</div>
+        </div>
+      </div>
+
+      <div class="bot-actions">
+        ${statusClass === 'running'
+          ? `<button class="btn btn-danger btn-sm" onclick="stopBot('${bot.id}')"><i class="ti ti-player-stop"></i> หยุด</button>`
+          : statusClass === 'connecting'
+          ? `<button class="btn btn-outline btn-sm" disabled style="opacity:0.5"><i class="ti ti-loader-2"></i> กำลังเชื่อมต่อ...</button>`
+          : `<button class="btn btn-success btn-sm" onclick="startBot('${bot.id}')"><i class="ti ti-player-play"></i> เริ่ม</button>`}
+        <button class="btn btn-outline btn-sm" onclick="editBot('${bot.id}')"><i class="ti ti-edit"></i> แก้ไข</button>
+        <button class="btn btn-outline btn-sm" onclick="toggleLog('${bot.id}')"><i class="ti ti-terminal-2"></i></button>
+        ${uptime ? `<div class="bot-uptime">⏱ ${uptime}</div>` : ''}
+        <button class="btn btn-outline btn-sm" onclick="confirmDelete('${bot.id}')" style="margin-left:auto;color:var(--red);border-color:var(--red-dim)"><i class="ti ti-trash"></i></button>
+      </div>
+
+      <div class="log-box" id="log-${bot.id}">
+        ${(bot.logs || []).map(l => `<div class="log-line ${l.type}"><span>${l.time}</span>${escHtml(l.msg)}</div>`).join('') || '<div class="log-line" style="opacity:0.4">ยังไม่มีล็อก</div>'}
+      </div>
+    </div>`;
+  }).join('');
+
+  grid.innerHTML = cards;
+}
+
+function stringToColor(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  const colors = ['#7c6ff7','#5b8af0','#3dd68c','#f5a623','#f25656','#c471ed','#44b3f8'];
+  return colors[Math.abs(hash) % colors.length];
+}
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function updateStats() {
+  const total = bots.length;
+  const online = bots.filter(b => b.status === 'running').length;
+  const connecting = bots.filter(b => b.status === 'connecting').length;
+  const stopped = bots.filter(b => b.status === 'stopped').length;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-online').textContent = online;
+  document.getElementById('stat-connecting').textContent = connecting;
+  document.getElementById('stat-stopped').textContent = stopped;
+  document.getElementById('nav-online-count').textContent = online;
+}
+
+/* ============================
+   BOT ACTIONS
+   ============================ */
+function startBot(id) {
+  const bot = bots.find(b => b.id === id);
+  if (!bot) return;
+  if (!bot.token || !bot.channelId || !bot.guildId) {
+    showToast('กรุณาตั้งค่า Token, Guild ID และ Channel ID ก่อน', 'error');
+    return;
+  }
+  bot.status = 'connecting';
+  renderBots();
+  addLog(bot, 'info', `กำลังเชื่อมต่อ... (${bot.guildId} / ${bot.channelId})`);
+
+  // Simulate connection
+  setTimeout(() => {
+    // Note: ในระบบจริงต้องใช้ backend/proxy เพราะ browser block WebSocket ไป Discord
+    bot.status = 'running';
+    bot.startTime = Date.now();
+    bot.uptime = 0;
+    startUptimeCounter(id);
+    addLog(bot, 'ok', `เชื่อมต่อสำเร็จ! เข้าช่องเสียง ${bot.channelId}`);
+    addActivity('join', `${bot.name} เข้าช่องเสียง`, bot.channelId);
+    showToast(`${bot.name} เชื่อมต่อสำเร็จ! ✅`, 'success');
+    renderBots();
+    saveToStorage();
+  }, 2200 + Math.random() * 800);
+}
+
+function stopBot(id) {
+  const bot = bots.find(b => b.id === id);
+  if (!bot) return;
+  clearInterval(uptimeIntervals[id]);
+  delete uptimeIntervals[id];
+  bot.status = 'stopped';
+  bot.uptime = 0;
+  addLog(bot, 'warn', 'ออกจากช่องเสียงแล้ว');
+  addActivity('leave', `${bot.name} ออกจากช่องเสียง`, bot.channelId || '-');
+  showToast(`${bot.name} หยุดทำงานแล้ว`, 'info');
+  renderBots();
+  saveToStorage();
+}
+
+function startUptimeCounter(id) {
+  uptimeIntervals[id] = setInterval(() => {
+    const bot = bots.find(b => b.id === id);
+    if (!bot || bot.status !== 'running') { clearInterval(uptimeIntervals[id]); return; }
+    bot.uptime = Math.floor((Date.now() - bot.startTime) / 1000);
+    const el = document.querySelector(`#bot-card-${id} .bot-uptime`);
+    if (el) el.textContent = '⏱ ' + formatUptime(bot.uptime);
+  }, 1000);
+}
+
+function startAllBots() {
+  const stopped = bots.filter(b => b.status === 'stopped');
+  if (stopped.length === 0) { showToast('ไม่มีบอทที่ต้องเริ่ม', 'info'); return; }
+  stopped.forEach((b, i) => setTimeout(() => startBot(b.id), i * 400));
+}
+
+function stopAllBots() {
+  const running = bots.filter(b => b.status === 'running');
+  if (running.length === 0) { showToast('ไม่มีบอทที่กำลังทำงาน', 'info'); return; }
+  running.forEach(b => stopBot(b.id));
+}
+
+function addLog(bot, type, msg) {
+  if (!bot.logs) bot.logs = [];
+  const time = new Date().toLocaleTimeString('th-TH');
+  bot.logs.unshift({ type, msg, time });
+  if (bot.logs.length > 20) bot.logs = bot.logs.slice(0, 20);
+}
+
+function toggleLog(id) {
+  const box = document.getElementById('log-' + id);
+  if (box) box.classList.toggle('visible');
+}
+
+/* ============================
+   ACTIVITY LOG
+   ============================ */
+function addActivity(type, detail, extra) {
+  activityLog.unshift({
+    time: new Date().toLocaleString('th-TH'),
+    type,
+    detail,
+    extra: extra || ''
+  });
+  if (activityLog.length > 200) activityLog = activityLog.slice(0, 200);
+  document.getElementById('nav-log-count').textContent = activityLog.length;
+  saveToStorage();
+}
+
+function renderActivityLog() {
+  const body = document.getElementById('activity-log-body');
+  if (activityLog.length === 0) {
+    body.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text3);font-size:13px;"><i class="ti ti-file-description" style="font-size:32px;display:block;margin-bottom:10px;opacity:0.3"></i>ยังไม่มีประวัติกิจกรรม</div>`;
+    return;
+  }
+  body.innerHTML = activityLog.map(l => `
+    <div class="log-row">
+      <div style="color:var(--text3);font-size:12px">${l.time}</div>
+      <div><span class="log-type-badge ${l.type}">${l.type}</span></div>
+      <div style="font-size:13px">${escHtml(l.detail)} ${l.extra ? `<span style="color:var(--text3)">· ${escHtml(l.extra)}</span>` : ''}</div>
+    </div>`).join('');
+}
+
+function clearLog() {
+  activityLog = [];
+  document.getElementById('nav-log-count').textContent = '0';
+  renderActivityLog();
+  saveToStorage();
+  showToast('ล้างประวัติแล้ว', 'info');
+}
+
+/* ============================
+   MODAL
+   ============================ */
+let currentTab = 'bot';
+
+function openAddModal() {
+  editingId = null;
+  currentTab = 'bot';
+  document.getElementById('modal-title').textContent = 'เพิ่มบอทใหม่';
+  document.getElementById('save-btn-label').textContent = 'เพิ่มบอท';
+  clearForm();
+  switchTab('bot');
+  document.getElementById('bot-modal').classList.add('open');
+}
+
+function editBot(id) {
+  const bot = bots.find(b => b.id === id);
+  if (!bot) return;
+  editingId = id;
+  document.getElementById('modal-title').textContent = 'แก้ไขบอท';
+  document.getElementById('save-btn-label').textContent = 'บันทึก';
+  document.getElementById('bot-name-input').value = bot.name || '';
+  document.getElementById('bot-token-input').value = bot.token || '';
+  document.getElementById('bot-guild-input').value = bot.guildId || '';
+  document.getElementById('bot-note-input').value = bot.note || '';
+  document.getElementById('bot-channel-input').value = bot.channelId || '';
+  document.getElementById('bot-mute-input').value = bot.selfMute || 'true';
+  document.getElementById('bot-deaf-input').value = bot.selfDeaf || 'true';
+  switchTab('bot');
+  document.getElementById('bot-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('bot-modal').classList.remove('open');
+}
+
+function clearForm() {
+  ['bot-name-input','bot-token-input','bot-guild-input','bot-note-input','bot-channel-input'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('bot-mute-input').value = 'true';
+  document.getElementById('bot-deaf-input').value = 'true';
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-bot').style.display = tab === 'bot' ? '' : 'none';
+  document.getElementById('tab-channel').style.display = tab === 'channel' ? '' : 'none';
+  document.querySelectorAll('.tabs .tab').forEach((el, i) => {
+    el.classList.toggle('active', (i === 0 && tab === 'bot') || (i === 1 && tab === 'channel'));
+  });
+}
+
+function saveBot() {
+  const name = document.getElementById('bot-name-input').value.trim();
+  const token = document.getElementById('bot-token-input').value.trim();
+  const guildId = document.getElementById('bot-guild-input').value.trim();
+  const note = document.getElementById('bot-note-input').value.trim();
+  const channelId = document.getElementById('bot-channel-input').value.trim();
+  const selfMute = document.getElementById('bot-mute-input').value;
+  const selfDeaf = document.getElementById('bot-deaf-input').value;
+
+  if (!name) { showToast('กรุณาใส่ชื่อบอท', 'error'); switchTab('bot'); document.getElementById('bot-name-input').focus(); return; }
+  if (!token) { showToast('กรุณาใส่ Bot Token', 'error'); switchTab('bot'); document.getElementById('bot-token-input').focus(); return; }
+  if (!guildId) { showToast('กรุณาใส่ Server ID', 'error'); switchTab('bot'); document.getElementById('bot-guild-input').focus(); return; }
+  if (!channelId) { showToast('กรุณาใส่ Voice Channel ID', 'error'); switchTab('channel'); document.getElementById('bot-channel-input').focus(); return; }
+
+  if (editingId) {
+    const bot = bots.find(b => b.id === editingId);
+    if (bot) { Object.assign(bot, { name, token, guildId, note, channelId, selfMute, selfDeaf }); }
+    showToast(`แก้ไข ${name} แล้ว`, 'success');
+    addActivity('info', `แก้ไขข้อมูลบอท ${name}`);
+  } else {
+    const bot = { id: genId(), name, token, guildId, note, channelId, selfMute, selfDeaf, status: 'stopped', uptime: 0, logs: [] };
+    bots.push(bot);
+    showToast(`เพิ่ม ${name} แล้ว! 🎉`, 'success');
+    addActivity('info', `เพิ่มบอทใหม่ ${name}`);
+  }
+
+  saveToStorage();
+  closeModal();
+  renderBots();
+}
+
+/* ============================
+   DELETE
+   ============================ */
+function confirmDelete(id) {
+  const bot = bots.find(b => b.id === id);
+  confirmCallback = () => deleteBot(id);
+  document.getElementById('confirm-title').textContent = 'ยืนยันการลบ';
+  document.getElementById('confirm-msg').textContent = `คุณต้องการลบบอท "${bot?.name}" ใช่หรือไม่? การกระทำนี้ไม่สามารถยกเลิกได้`;
+  document.getElementById('confirm-icon').className = 'ti ti-alert-triangle';
+  document.getElementById('confirm-ok-btn').textContent = 'ลบ';
+  document.getElementById('confirm-dialog').classList.add('open');
+}
+
+function closeConfirm() {
+  document.getElementById('confirm-dialog').classList.remove('open');
+  confirmCallback = null;
+}
+
+function confirmOk() {
+  if (confirmCallback) confirmCallback();
+  closeConfirm();
+}
+
+function deleteBot(id) {
+  const bot = bots.find(b => b.id === id);
+  if (!bot) return;
+  if (bot.status === 'running') stopBot(id);
+  bots = bots.filter(b => b.id !== id);
+  showToast(`ลบ ${bot.name} แล้ว`, 'info');
+  addActivity('info', `ลบบอท ${bot.name}`);
+  saveToStorage();
+  renderBots();
+}
+
+/* ============================
+   TOAST
+   ============================ */
+function showToast(msg, type = 'info') {
+  const icons = { success: 'ti-circle-check', error: 'ti-alert-circle', info: 'ti-info-circle' };
+  const tc = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<i class="ti ${icons[type] || 'ti-info-circle'}"></i><span>${escHtml(msg)}</span>`;
+  tc.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(40px)'; el.style.transition = 'all 0.3s'; setTimeout(() => el.remove(), 300); }, 3500);
+}
+
+/* ============================
+   TOKEN TOGGLE
+   ============================ */
+function toggleTokenVisible() {
+  const inp = document.getElementById('bot-token-input');
+  const icon = document.getElementById('token-eye-icon');
+  if (inp.type === 'password') { inp.type = 'text'; icon.className = 'ti ti-eye-off'; }
+  else { inp.type = 'password'; icon.className = 'ti ti-eye'; }
+}
+
+/* ============================
+   SETTINGS
+   ============================ */
+function toggleLocalStorage(el) {
+  el.classList.toggle('on');
+}
+
+function exportData() {
+  const data = JSON.stringify({ bots: bots.map(b => ({ ...b, status: 'stopped', uptime: 0, logs: [] })), exported: new Date().toISOString() }, null, 2);
+  const a = document.createElement('a');
+  a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(data);
+  a.download = 'voicebot-hub-export.json';
+  a.click();
+  showToast('Export สำเร็จ!', 'success');
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (data.bots && Array.isArray(data.bots)) {
+        bots = data.bots.map(b => ({ ...b, status: 'stopped', uptime: 0, logs: [] }));
+        saveToStorage();
+        renderBots();
+        showToast(`Import สำเร็จ! พบ ${bots.length} บอท`, 'success');
+      } else throw new Error();
+    } catch { showToast('ไฟล์ไม่ถูกต้อง', 'error'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function openDocs() {
+  alert('📖 คู่มือการใช้งาน\n\n1. เพิ่มบอทโดยคลิก "เพิ่มบอท"\n2. กรอก Bot Token จาก Discord Developer Portal\n3. ใส่ Server ID และ Voice Channel ID\n4. กด "เริ่ม" เพื่อให้บอทเข้าช่องเสียง\n\n⚠️ หมายเหตุ: เว็บนี้จำลองการทำงาน เพราะ browser ไม่สามารถเชื่อมต่อ Discord Gateway โดยตรงได้ ต้องใช้ Backend/Proxy server\n\nสำหรับระบบจริง ให้ Deploy backend บน Railway/Heroku แล้วเรียก API จากเว็บนี้');
+}
+
+/* ============================
+   KEYBOARD SHORTCUTS
+   ============================ */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeConfirm(); }
+});
+document.getElementById('bot-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('bot-modal')) closeModal();
+});
+document.getElementById('confirm-dialog').addEventListener('click', e => {
+  if (e.target === document.getElementById('confirm-dialog')) closeConfirm();
+});
+
+/* ============================
+   INIT
+   ============================ */
+loadFromStorage();
+document.getElementById('nav-log-count').textContent = activityLog.length;
+renderBots();
+</script>
+</body>
+</html>
