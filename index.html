@@ -3,17 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Voice Bot Manager - Discord Direct</title>
+<title>🎙️ Voice Bot Manager</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
 <style>
-  /* Anti-inspect */
+  /* ===== ANTI-INSPECT ===== */
   * {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
   }
   
+  /* ป้องกันการเลือกข้อความ */
+  ::selection { background: transparent !important; }
+  ::-moz-selection { background: transparent !important; }
+
   :root {
     --bg: #0e0f17;
     --bg2: #13141f;
@@ -38,29 +43,65 @@
     --radius-sm: 8px;
     --shadow: 0 4px 24px rgba(0,0,0,0.4);
   }
-  
+
   body {
     font-family: 'Segoe UI', system-ui, sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    overflow-x: hidden;
-  }
-  
-  /* Background */
-  body::before {
-    content: '';
+    overflow: hidden;
     position: fixed;
-    top: -200px; left: -200px;
-    width: 700px; height: 700px;
-    background: radial-gradient(circle, rgba(124,111,247,0.08) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
+    width: 100%;
+    height: 100%;
   }
-  
+
+  /* Anti-debug overlay */
+  #anti-debug-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+    padding: 20px;
+  }
+  #anti-debug-overlay.show {
+    display: flex;
+  }
+  #anti-debug-overlay i {
+    font-size: 64px;
+    color: var(--red);
+  }
+  #anti-debug-overlay h2 {
+    color: var(--red);
+    font-size: 24px;
+  }
+  #anti-debug-overlay p {
+    color: var(--text2);
+    max-width: 400px;
+    line-height: 1.6;
+  }
+  #anti-debug-overlay button {
+    background: var(--purple);
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  #anti-debug-overlay button:hover {
+    background: #6a63e0;
+  }
+
+  /* ===== UI STYLES ===== */
   .app { position: relative; z-index: 1; display: flex; min-height: 100vh; }
 
-  /* Sidebar */
   .sidebar {
     width: 240px;
     min-height: 100vh;
@@ -73,7 +114,6 @@
     top: 0; left: 0; bottom: 0;
     z-index: 10;
   }
-  
   .sidebar-logo {
     padding: 24px 20px 20px;
     display: flex;
@@ -81,7 +121,6 @@
     gap: 10px;
     border-bottom: 1px solid var(--border);
   }
-  
   .logo-icon {
     width: 36px; height: 36px;
     background: linear-gradient(135deg, var(--purple), #5b52d8);
@@ -90,13 +129,11 @@
     font-size: 18px;
     flex-shrink: 0;
   }
-  
   .logo-text { font-size: 15px; font-weight: 600; color: var(--text); }
   .logo-sub { font-size: 10px; color: var(--text3); letter-spacing: 1.2px; text-transform: uppercase; }
 
   .sidebar-nav { padding: 12px 10px; flex: 1; }
   .nav-label { font-size: 10px; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 10px 4px; }
-  
   .nav-item {
     display: flex; align-items: center; gap: 10px;
     padding: 9px 10px;
@@ -110,7 +147,6 @@
   .nav-item:hover { background: var(--bg4); color: var(--text); }
   .nav-item.active { background: var(--purple-dim); color: var(--purple2); }
   .nav-item i { font-size: 17px; }
-  
   .nav-badge {
     margin-left: auto;
     background: var(--purple-dim);
@@ -130,10 +166,8 @@
     text-align: center;
   }
 
-  /* Main */
   .main { margin-left: 240px; flex: 1; min-height: 100vh; }
 
-  /* Topbar */
   .topbar {
     height: 60px;
     background: var(--bg2);
@@ -170,10 +204,8 @@
   .btn-danger:hover { background: rgba(242,86,86,0.2); }
   .btn-sm { padding: 5px 11px; font-size: 12px; }
 
-  /* Content */
-  .content { padding: 28px; }
+  .content { padding: 28px; overflow-y: auto; height: calc(100vh - 60px); }
 
-  /* Stats */
   .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -207,9 +239,17 @@
   .stat-val.amber { color: var(--amber); }
   .stat-val.red { color: var(--red); }
 
-  /* Bot Cards */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .section-title { font-size: 15px; font-weight: 600; }
+  .section-sub { font-size: 13px; color: var(--text2); margin-top: 1px; }
+
   .bots-grid { display: grid; gap: 14px; }
-  
+
   .bot-card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -294,7 +334,15 @@
   .bot-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .bot-uptime { margin-left: auto; font-size: 12px; color: var(--text3); }
 
-  /* Modal */
+  .empty-state {
+    text-align: center;
+    padding: 60px 24px;
+    color: var(--text3);
+  }
+  .empty-state i { font-size: 48px; margin-bottom: 14px; display: block; opacity: 0.4; }
+  .empty-state h3 { font-size: 16px; color: var(--text2); margin-bottom: 8px; }
+  .empty-state p { font-size: 13px; line-height: 1.6; }
+
   .modal-backdrop {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.65);
@@ -354,7 +402,6 @@
     display: flex; gap: 10px; justify-content: flex-end;
   }
 
-  /* Form */
   .form-group { margin-bottom: 16px; }
   .form-label {
     display: flex; align-items: center; gap: 6px;
@@ -385,7 +432,6 @@
   input::placeholder { color: var(--text3); }
   select option { background: var(--bg2); }
 
-  /* Tabs */
   .tabs {
     display: flex; gap: 4px;
     background: var(--bg3);
@@ -403,17 +449,6 @@
   }
   .tab.active { background: var(--purple-dim); color: var(--purple2); font-weight: 500; }
 
-  /* Empty State */
-  .empty-state {
-    text-align: center;
-    padding: 60px 24px;
-    color: var(--text3);
-  }
-  .empty-state i { font-size: 48px; margin-bottom: 14px; display: block; opacity: 0.4; }
-  .empty-state h3 { font-size: 16px; color: var(--text2); margin-bottom: 8px; }
-  .empty-state p { font-size: 13px; line-height: 1.6; }
-
-  /* Toast */
   .toast-container {
     position: fixed;
     bottom: 24px; right: 24px;
@@ -444,7 +479,6 @@
     to { opacity:1; transform: translateX(0); }
   }
 
-  /* Confirm Dialog */
   .confirm-dialog {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.7);
@@ -466,15 +500,6 @@
   .confirm-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
   .confirm-msg { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 20px; }
   .confirm-actions { display: flex; gap: 10px; justify-content: flex-end; }
-
-  .section-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .section-title { font-size: 15px; font-weight: 600; }
-  .section-sub { font-size: 13px; color: var(--text2); margin-top: 1px; }
 
   .connection-status {
     display: flex;
@@ -498,711 +523,97 @@
   .pulse { animation: pulse 2s infinite; }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-  /* Responsive */
+  .log-page { display: none; }
+  .log-page.active { display: block; }
+  .settings-page { display: none; }
+  .settings-page.active { display: block; }
+
+  .settings-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+  .settings-section-title { font-size: 14px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .settings-section-title i { color: var(--purple2); font-size: 18px; }
+  
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .toggle-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .toggle-label { font-size: 14px; }
+  .toggle-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
+  
+  .toggle {
+    width: 42px; height: 22px;
+    background: var(--border2);
+    border-radius: 11px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .toggle.on { background: var(--purple); }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    top: 3px; left: 3px;
+    transition: transform 0.2s;
+  }
+  .toggle.on::after { transform: translateX(20px); }
+
+  .log-row {
+    display: grid;
+    grid-template-columns: 130px 100px 1fr;
+    padding: 10px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    gap: 16px;
+    align-items: center;
+  }
+  .log-row.header { background: var(--bg3); font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; }
+  .log-type-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .log-type-badge.join { background: var(--green-dim); color: var(--green); }
+  .log-type-badge.leave { background: var(--red-dim); color: var(--red); }
+  .log-type-badge.info { background: var(--purple-dim); color: var(--purple2); }
+
   @media (max-width: 680px) {
     .sidebar { display: none; }
     .main { margin-left: 0; }
     .stats-grid { grid-template-columns: 1fr 1fr; }
     .bot-fields { grid-template-columns: 1fr; }
+    .log-row { grid-template-columns: 1fr; gap: 4px; }
+    .log-row.header { display: none; }
   }
 
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
-
-  /* Anti-debug */
-  .debug-protection {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    padding: 4px 8px;
-    background: rgba(255,0,0,0.05);
-    color: #333;
-    font-size: 8px;
-    z-index: 9999;
-    pointer-events: none;
-  }
 </style>
 </head>
 <body>
 
-<script>
-  // ========== ANTI-INSPECT ==========
-  // ป้องกันคลิกขวา
-  document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
-  
-  // ป้องกัน F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
-  document.addEventListener('keydown', e => {
-    if (e.key === 'F12' || 
-        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) ||
-        (e.ctrlKey && e.key === 'U')) {
-      e.preventDefault();
-      showToast('⚠️ ไม่สามารถเปิดเครื่องมือพัฒนาได้', 'error');
-      return false;
-    }
-  });
-  
-  // ตรวจจับ DevTools
-  (function detectDevTools() {
-    const element = new Image();
-    Object.defineProperty(element, 'id', {
-      get: function() {
-        document.body.innerHTML = `
-          <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0e0f17;color:#f25656;flex-direction:column;gap:20px;text-align:center;padding:20px;">
-            <i class="ti ti-alert-triangle" style="font-size:64px;"></i>
-            <h2>⚠️ ตรวจพบการเปิดเครื่องมือพัฒนา</h2>
-            <p style="color:#8b8fa8;max-width:400px;">เพื่อความปลอดภัย กรุณาปิด DevTools และรีเฟรชหน้าเว็บ</p>
-            <button onclick="location.reload()" style="background:#7c6ff7;color:#fff;border:none;padding:12px 30px;border-radius:8px;cursor:pointer;font-size:16px;">รีเฟรชหน้า</button>
-          </div>
-        `;
-      }
-    });
-    console.log('%c', element);
-  })();
-
-  // ========== DATA STORE ==========
-  let bots = [];
-  let activityLog = [];
-  let editingId = null;
-  let confirmCallback = null;
-  let uptimeIntervals = {};
-  let wsConnections = {};
-
-  function genId() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-  }
-
-  function loadFromStorage() {
-    try {
-      const saved = localStorage.getItem('voicebot_hub_bots');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) bots = parsed;
-      }
-      bots.forEach(b => {
-        if (!b.status) b.status = 'stopped';
-        if (!b.uptime) b.uptime = 0;
-        if (!b.logs) b.logs = [];
-      });
-      const log = localStorage.getItem('voicebot_hub_log');
-      if (log) {
-        const parsedLog = JSON.parse(log);
-        if (Array.isArray(parsedLog)) activityLog = parsedLog;
-      }
-    } catch(e) {}
-  }
-
-  function saveToStorage() {
-    try {
-      localStorage.setItem('voicebot_hub_bots', JSON.stringify(bots));
-      localStorage.setItem('voicebot_hub_log', JSON.stringify(activityLog.slice(0, 200)));
-    } catch(e) {}
-  }
-
-  // ========== DISCORD WEBSOCKET ==========
-  function createVoiceConnection(bot) {
-    const { token, guildId, channelId, selfMute, selfDeaf } = bot;
-    const id = bot.id;
-
-    if (wsConnections[id]) {
-      try { wsConnections[id].close(); } catch(_) {}
-      delete wsConnections[id];
-    }
-
-    return new Promise((resolve, reject) => {
-      const ws = new WebSocket('wss://gateway.discord.gg/?v=10&encoding=json');
-      let heartbeatInterval, heartbeatWatchdog, voiceStateKeepalive;
-      let lastHeartbeatAck = Date.now();
-      let resolved = false;
-
-      const connTimeout = setTimeout(() => {
-        try { ws.close(); } catch(_) {}
-        if (!resolved) reject(new Error('Connection timeout'));
-      }, 15000);
-
-      const sendVoiceState = () => {
-        try {
-          ws.send(JSON.stringify({
-            op: 4,
-            d: {
-              guild_id: guildId,
-              channel_id: channelId,
-              self_mute: selfMute === 'true',
-              self_deaf: selfDeaf === 'true'
-            }
-          }));
-        } catch(_) {}
-      };
-
-      ws.onopen = () => {
-        // เปิด connection แล้ว
-      };
-
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          const { op, d, t } = data;
-
-          if (op === 11) {
-            lastHeartbeatAck = Date.now();
-          }
-
-          if (op === 10) {
-            clearTimeout(connTimeout);
-            const interval = d.heartbeat_interval;
-            
-            heartbeatInterval = setInterval(() => {
-              try { ws.send(JSON.stringify({ op: 1, d: null })); } catch(_) {}
-            }, interval);
-            
-            heartbeatWatchdog = setInterval(() => {
-              if (Date.now() - lastHeartbeatAck > interval * 2.5) {
-                try { ws.close(4000); } catch(_) {}
-              }
-            }, interval);
-            
-            // Identify
-            ws.send(JSON.stringify({
-              op: 2,
-              d: {
-                token: token,
-                properties: {
-                  $os: 'linux',
-                  $browser: 'discord.js',
-                  $device: 'discord.js'
-                },
-                intents: 1 << 7 // GUILD_VOICE_STATES
-              }
-            }));
-          }
-
-          if (op === 0 && t === 'READY') {
-            wsConnections[id] = ws;
-            voiceStateKeepalive = setInterval(sendVoiceState, 4 * 60 * 1000);
-            sendVoiceState();
-            if (!resolved) {
-              resolved = true;
-              resolve(ws);
-            }
-          }
-
-          if (op === 0 && t === 'VOICE_STATE_UPDATE') {
-            if (d?.guild_id === guildId && d.channel_id !== channelId) {
-              setTimeout(sendVoiceState, 800);
-            }
-          }
-
-          if (op === 7 || op === 9) {
-            try { ws.close(); } catch(_) {}
-            if (!resolved) reject(new Error('Token ไม่ถูกต้องหรือหมดอายุ'));
-          }
-        } catch(err) {
-          console.error('WebSocket message error:', err);
-        }
-      };
-
-      ws.onclose = (event) => {
-        clearTimeout(connTimeout);
-        if (heartbeatInterval) clearInterval(heartbeatInterval);
-        if (heartbeatWatchdog) clearInterval(heartbeatWatchdog);
-        if (voiceStateKeepalive) clearInterval(voiceStateKeepalive);
-        delete wsConnections[id];
-        
-        if (bot.status === 'running') {
-          bot.status = 'stopped';
-          bot.uptime = 0;
-          addLog(bot, 'warn', '❌ การเชื่อมต่อ断开 (Code: ' + event.code + ')');
-          showToast(`${bot.name} หลุดจากการเชื่อมต่อ`, 'error');
-          renderBots();
-          saveToStorage();
-        }
-        
-        if (!resolved && event.code !== 1000) {
-          reject(new Error('Connection closed - Code: ' + event.code));
-        }
-      };
-
-      ws.onerror = (error) => {
-        if (!resolved) {
-          clearTimeout(connTimeout);
-          reject(error);
-        }
-      };
-    });
-  }
-
-  // ========== BOT ACTIONS ==========
-  async function startBot(id) {
-    const bot = bots.find(b => b.id === id);
-    if (!bot) return;
-    if (!bot.token || !bot.channelId || !bot.guildId) {
-      showToast('กรุณาตั้งค่า Token, Guild ID และ Channel ID ก่อน', 'error');
-      return;
-    }
-
-    bot.status = 'connecting';
-    renderBots();
-    addLog(bot, 'info', '🔄 กำลังเชื่อมต่อ Discord...');
-
-    try {
-      await createVoiceConnection(bot);
-      bot.status = 'running';
-      bot.startTime = Date.now();
-      bot.uptime = 0;
-      startUptimeCounter(id);
-      addLog(bot, 'ok', `✅ เชื่อมต่อสำเร็จ! เข้าช่องเสียง ${bot.channelId}`);
-      addActivity('join', `${bot.name} เข้าช่องเสียง`, bot.channelId);
-      showToast(`${bot.name} เชื่อมต่อสำเร็จ! ✅`, 'success');
-    } catch (err) {
-      bot.status = 'stopped';
-      addLog(bot, 'err', `❌ เชื่อมต่อล้มเหลว: ${err.message}`);
-      showToast(`เชื่อมต่อ ${bot.name} ล้มเหลว: ${err.message}`, 'error');
-    }
-
-    renderBots();
-    saveToStorage();
-  }
-
-  function stopBot(id) {
-    const bot = bots.find(b => b.id === id);
-    if (!bot) return;
-    
-    clearInterval(uptimeIntervals[id]);
-    delete uptimeIntervals[id];
-    
-    if (wsConnections[id]) {
-      try { wsConnections[id].close(1000, 'User stopped'); } catch(_) {}
-      delete wsConnections[id];
-    }
-    
-    bot.status = 'stopped';
-    bot.uptime = 0;
-    addLog(bot, 'warn', '⏹ ออกจากช่องเสียงแล้ว');
-    addActivity('leave', `${bot.name} ออกจากช่องเสียง`, bot.channelId || '-');
-    showToast(`${bot.name} หยุดทำงานแล้ว`, 'info');
-    
-    renderBots();
-    saveToStorage();
-  }
-
-  function startUptimeCounter(id) {
-    uptimeIntervals[id] = setInterval(() => {
-      const bot = bots.find(b => b.id === id);
-      if (!bot || bot.status !== 'running') {
-        clearInterval(uptimeIntervals[id]);
-        return;
-      }
-      bot.uptime = Math.floor((Date.now() - bot.startTime) / 1000);
-      const el = document.querySelector(`#bot-card-${id} .bot-uptime`);
-      if (el) el.textContent = '⏱ ' + formatUptime(bot.uptime);
-    }, 1000);
-  }
-
-  function startAllBots() {
-    const stopped = bots.filter(b => b.status === 'stopped');
-    if (stopped.length === 0) { showToast('ไม่มีบอทที่ต้องเริ่ม', 'info'); return; }
-    stopped.forEach((b, i) => setTimeout(() => startBot(b.id), i * 400));
-  }
-
-  function stopAllBots() {
-    const running = bots.filter(b => b.status === 'running');
-    if (running.length === 0) { showToast('ไม่มีบอทที่กำลังทำงาน', 'info'); return; }
-    running.forEach(b => stopBot(b.id));
-  }
-
-  // ========== RENDER ==========
-  function getInitials(name) {
-    if (!name) return '??';
-    return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-  }
-
-  function maskToken(token) {
-    if (!token) return '-';
-    if (token.length < 12) return '••••••••';
-    return token.slice(0, 8) + '•'.repeat(10) + token.slice(-4);
-  }
-
-  function formatUptime(s) {
-    if (!s || s < 0) return '0วิ';
-    if (s < 60) return s + 'วิ';
-    if (s < 3600) return Math.floor(s/60) + 'น.';
-    const h = Math.floor(s/3600), m = Math.floor((s%3600)/60);
-    return h + 'ชม.' + (m ? m + 'น.' : '');
-  }
-
-  function stringToColor(str) {
-    if (!str) return '#7c6ff7';
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    const colors = ['#7c6ff7','#5b8af0','#3dd68c','#f5a623','#f25656','#c471ed','#44b3f8'];
-    return colors[Math.abs(hash) % colors.length];
-  }
-
-  function escHtml(s) {
-    if (!s) return '';
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  function renderBots() {
-    const grid = document.getElementById('bots-grid');
-    const empty = document.getElementById('empty-state');
-    updateStats();
-
-    if (bots.length === 0) {
-      empty.style.display = '';
-      grid.innerHTML = '';
-      grid.appendChild(empty);
-      return;
-    }
-    empty.style.display = 'none';
-
-    const cards = bots.map(bot => {
-      const statusClass = bot.status || 'stopped';
-      const statusLabel = { running: '🟢 ออนไลน์', stopped: '⚫ หยุด', connecting: '🟡 กำลังเชื่อมต่อ' }[statusClass] || 'หยุด';
-      const initials = getInitials(bot.name);
-      const dotClass = { running: 'online', stopped: 'offline', connecting: 'connecting' }[statusClass];
-      const uptime = bot.uptime > 0 ? formatUptime(bot.uptime) : null;
-
-      return `
-      <div class="bot-card ${statusClass}" id="bot-card-${bot.id}">
-        <div class="bot-header">
-          <div class="bot-avatar" style="background:${stringToColor(bot.name)}">
-            ${initials}
-            <div class="status-dot ${dotClass}"></div>
-          </div>
-          <div class="bot-info">
-            <div class="bot-name">${escHtml(bot.name)}</div>
-            <div class="bot-id">${bot.guildId ? 'Guild: ' + bot.guildId : 'ยังไม่ได้ตั้งค่า'}</div>
-          </div>
-          <div class="status-badge ${statusClass}">
-            <div class="dot ${statusClass === 'connecting' ? 'pulse' : ''}"></div>
-            ${statusLabel}
-          </div>
-        </div>
-
-        <div class="bot-fields">
-          <div class="bot-field">
-            <div class="bot-field-label">🔑 Bot Token</div>
-            <div class="bot-field-val token">${maskToken(bot.token)}</div>
-          </div>
-          <div class="bot-field">
-            <div class="bot-field-label">🔊 Voice Channel</div>
-            <div class="bot-field-val ${bot.channelId ? '' : 'empty'}">${bot.channelId ? bot.channelId : 'ยังไม่ได้ระบุ'}</div>
-          </div>
-          <div class="bot-field">
-            <div class="bot-field-label">🔇 Mute</div>
-            <div class="bot-field-val">${bot.selfMute === 'false' ? 'เปิดเสียง' : 'ปิดเสียง'}</div>
-          </div>
-          <div class="bot-field">
-            <div class="bot-field-label">🔊 Deaf</div>
-            <div class="bot-field-val">${bot.selfDeaf === 'false' ? 'ไม่ปิด' : 'ปิดหูฟัง'}</div>
-          </div>
-        </div>
-
-        <div class="bot-actions">
-          ${statusClass === 'running'
-            ? `<button class="btn btn-danger btn-sm" onclick="stopBot('${bot.id}')"><i class="ti ti-player-stop"></i> หยุด</button>`
-            : statusClass === 'connecting'
-            ? `<button class="btn btn-outline btn-sm" disabled style="opacity:0.5"><i class="ti ti-loader-2"></i> กำลังเชื่อมต่อ...</button>`
-            : `<button class="btn btn-success btn-sm" onclick="startBot('${bot.id}')"><i class="ti ti-player-play"></i> เริ่ม</button>`}
-          <button class="btn btn-outline btn-sm" onclick="editBot('${bot.id}')"><i class="ti ti-edit"></i> แก้ไข</button>
-          ${uptime ? `<div class="bot-uptime">⏱ ${uptime}</div>` : ''}
-          <button class="btn btn-outline btn-sm" onclick="confirmDelete('${bot.id}')" style="margin-left:auto;color:var(--red);border-color:var(--red-dim)"><i class="ti ti-trash"></i></button>
-        </div>
-      </div>`;
-    }).join('');
-
-    grid.innerHTML = cards;
-  }
-
-  function updateStats() {
-    const total = bots.length;
-    const online = bots.filter(b => b.status === 'running').length;
-    const connecting = bots.filter(b => b.status === 'connecting').length;
-    const stopped = bots.filter(b => b.status === 'stopped').length;
-    document.getElementById('stat-total').textContent = total;
-    document.getElementById('stat-online').textContent = online;
-    document.getElementById('stat-connecting').textContent = connecting;
-    document.getElementById('stat-stopped').textContent = stopped;
-    document.getElementById('nav-online-count').textContent = online;
-  }
-
-  // ========== MODAL ==========
-  let currentTab = 'bot';
-
-  function openAddModal() {
-    editingId = null;
-    document.getElementById('modal-title').textContent = 'เพิ่มบอทใหม่';
-    document.getElementById('save-btn-label').textContent = 'เพิ่มบอท';
-    clearForm();
-    switchTab('bot');
-    document.getElementById('bot-modal').classList.add('open');
-  }
-
-  function editBot(id) {
-    const bot = bots.find(b => b.id === id);
-    if (!bot) return;
-    editingId = id;
-    document.getElementById('modal-title').textContent = 'แก้ไขบอท';
-    document.getElementById('save-btn-label').textContent = 'บันทึก';
-    document.getElementById('bot-name-input').value = bot.name || '';
-    document.getElementById('bot-token-input').value = bot.token || '';
-    document.getElementById('bot-guild-input').value = bot.guildId || '';
-    document.getElementById('bot-channel-input').value = bot.channelId || '';
-    document.getElementById('bot-mute-input').value = bot.selfMute || 'true';
-    document.getElementById('bot-deaf-input').value = bot.selfDeaf || 'true';
-    switchTab('bot');
-    document.getElementById('bot-modal').classList.add('open');
-  }
-
-  function closeModal() {
-    document.getElementById('bot-modal').classList.remove('open');
-  }
-
-  function clearForm() {
-    ['bot-name-input','bot-token-input','bot-guild-input','bot-channel-input'].forEach(id => {
-      document.getElementById(id).value = '';
-    });
-    document.getElementById('bot-mute-input').value = 'true';
-    document.getElementById('bot-deaf-input').value = 'true';
-  }
-
-  function switchTab(tab) {
-    currentTab = tab;
-    document.getElementById('tab-bot').style.display = tab === 'bot' ? '' : 'none';
-    document.getElementById('tab-channel').style.display = tab === 'channel' ? '' : 'none';
-    document.querySelectorAll('.tabs .tab').forEach((el, i) => {
-      el.classList.toggle('active', (i === 0 && tab === 'bot') || (i === 1 && tab === 'channel'));
-    });
-  }
-
-  function saveBot() {
-    const name = document.getElementById('bot-name-input').value.trim();
-    const token = document.getElementById('bot-token-input').value.trim();
-    const guildId = document.getElementById('bot-guild-input').value.trim();
-    const channelId = document.getElementById('bot-channel-input').value.trim();
-    const selfMute = document.getElementById('bot-mute-input').value;
-    const selfDeaf = document.getElementById('bot-deaf-input').value;
-
-    if (!name) { showToast('กรุณาใส่ชื่อบอท', 'error'); return; }
-    if (!token) { showToast('กรุณาใส่ Bot Token', 'error'); return; }
-    if (!guildId) { showToast('กรุณาใส่ Server ID', 'error'); return; }
-    if (!channelId) { showToast('กรุณาใส่ Voice Channel ID', 'error'); return; }
-
-    if (editingId) {
-      const bot = bots.find(b => b.id === editingId);
-      if (bot) {
-        if (bot.status === 'running') stopBot(bot.id);
-        Object.assign(bot, { name, token, guildId, channelId, selfMute, selfDeaf });
-      }
-      showToast(`แก้ไข ${name} แล้ว`, 'success');
-    } else {
-      const bot = {
-        id: genId(),
-        name,
-        token,
-        guildId,
-        channelId,
-        selfMute,
-        selfDeaf,
-        status: 'stopped',
-        uptime: 0,
-        logs: []
-      };
-      bots.push(bot);
-      showToast(`เพิ่ม ${name} แล้ว! 🎉`, 'success');
-      addActivity('info', `เพิ่มบอทใหม่ ${name}`);
-    }
-
-    saveToStorage();
-    closeModal();
-    renderBots();
-  }
-
-  // ========== DELETE ==========
-  function confirmDelete(id) {
-    const bot = bots.find(b => b.id === id);
-    confirmCallback = () => deleteBot(id);
-    document.getElementById('confirm-title').textContent = 'ยืนยันการลบ';
-    document.getElementById('confirm-msg').textContent = `คุณต้องการลบบอท "${bot?.name}" ใช่หรือไม่?`;
-    document.getElementById('confirm-dialog').classList.add('open');
-  }
-
-  function closeConfirm() {
-    document.getElementById('confirm-dialog').classList.remove('open');
-    confirmCallback = null;
-  }
-
-  function confirmOk() {
-    if (confirmCallback) confirmCallback();
-    closeConfirm();
-  }
-
-  function deleteBot(id) {
-    const bot = bots.find(b => b.id === id);
-    if (!bot) return;
-    if (bot.status === 'running') stopBot(id);
-    bots = bots.filter(b => b.id !== id);
-    showToast(`ลบ ${bot.name} แล้ว`, 'info');
-    addActivity('info', `ลบบอท ${bot.name}`);
-    saveToStorage();
-    renderBots();
-  }
-
-  // ========== ACTIVITY LOG ==========
-  function addActivity(type, detail, extra) {
-    activityLog.unshift({
-      time: new Date().toLocaleString('th-TH'),
-      type,
-      detail,
-      extra: extra || ''
-    });
-    if (activityLog.length > 200) activityLog = activityLog.slice(0, 200);
-    document.getElementById('nav-log-count').textContent = activityLog.length;
-    saveToStorage();
-  }
-
-  function addLog(bot, type, msg) {
-    if (!bot.logs) bot.logs = [];
-    const time = new Date().toLocaleTimeString('th-TH');
-    bot.logs.unshift({ type, msg, time });
-    if (bot.logs.length > 20) bot.logs = bot.logs.slice(0, 20);
-  }
-
-  function clearLog() {
-    activityLog = [];
-    document.getElementById('nav-log-count').textContent = '0';
-    saveToStorage();
-    showToast('ล้างประวัติแล้ว', 'info');
-  }
-
-  // ========== TOAST ==========
-  function showToast(msg, type = 'info') {
-    const icons = { success: 'ti-circle-check', error: 'ti-alert-circle', info: 'ti-info-circle' };
-    const tc = document.getElementById('toast-container');
-    const el = document.createElement('div');
-    el.className = `toast ${type}`;
-    el.innerHTML = `<i class="ti ${icons[type] || 'ti-info-circle'}"></i><span>${escHtml(msg)}</span>`;
-    tc.appendChild(el);
-    setTimeout(() => {
-      el.style.opacity = '0';
-      el.style.transform = 'translateX(40px)';
-      el.style.transition = 'all 0.3s';
-      setTimeout(() => el.remove(), 300);
-    }, 4000);
-  }
-
-  // ========== PAGE ROUTING ==========
-  function showPage(page) {
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    document.getElementById('nav-' + page)?.classList.add('active');
-
-    document.getElementById('bots-page').style.display = page === 'bots' ? 'block' : 'none';
-    document.getElementById('activity-page').style.display = page === 'activity' ? 'block' : 'none';
-    document.getElementById('settings-page').style.display = page === 'settings' ? 'block' : 'none';
-
-    const titles = {
-      bots: ['บอทของฉัน', 'จัดการบอท Discord Voice Channel ทั้งหมด'],
-      activity: ['ประวัติกิจกรรม', 'บันทึกการเชื่อมต่อและเหตุการณ์'],
-      settings: ['ตั้งค่า', 'กำหนดค่าระบบและความปลอดภัย']
-    };
-    document.getElementById('page-title').textContent = titles[page]?.[0] || 'บอทของฉัน';
-    document.getElementById('page-sub').textContent = titles[page]?.[1] || '';
-    document.getElementById('topbar-actions').style.display = page === 'bots' ? '' : 'none';
-    
-    if (page === 'activity') {
-      const body = document.getElementById('activity-log-body');
-      if (activityLog.length === 0) {
-        body.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text3);font-size:13px;">ยังไม่มีประวัติกิจกรรม</div>`;
-      } else {
-        body.innerHTML = activityLog.slice(0, 50).map(l => `
-          <div style="display:grid;grid-template-columns:130px 100px 1fr;padding:10px 16px;font-size:13px;border-bottom:1px solid var(--border);gap:16px;align-items:center;">
-            <div style="color:var(--text3);font-size:12px">${l.time}</div>
-            <div><span class="log-type-badge ${l.type}">${l.type}</span></div>
-            <div>${escHtml(l.detail)} ${l.extra ? `<span style="color:var(--text3)">· ${escHtml(l.extra)}</span>` : ''}</div>
-          </div>
-        `).join('');
-      }
-    }
-  }
-
-  // ========== SETTINGS ==========
-  function toggleLocalStorage(el) {
-    el.classList.toggle('on');
-    if (el.classList.contains('on')) {
-      saveToStorage();
-      showToast('✅ เปิดการบันทึกข้อมูล', 'success');
-    } else {
-      localStorage.removeItem('voicebot_hub_bots');
-      localStorage.removeItem('voicebot_hub_log');
-      showToast('⚠️ ปิดการบันทึกข้อมูล', 'info');
-    }
-  }
-
-  function exportData() {
-    const data = JSON.stringify({
-      bots: bots.map(b => ({ ...b, status: 'stopped', uptime: 0, logs: [] })),
-      exported: new Date().toISOString()
-    }, null, 2);
-    const a = document.createElement('a');
-    a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(data);
-    a.download = 'voicebot-hub-export.json';
-    a.click();
-    showToast('Export สำเร็จ!', 'success');
-  }
-
-  function importData(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      try {
-        const data = JSON.parse(ev.target.result);
-        if (data.bots && Array.isArray(data.bots)) {
-          bots = data.bots.map(b => ({ ...b, status: 'stopped', uptime: 0, logs: [] }));
-          saveToStorage();
-          renderBots();
-          showToast(`Import สำเร็จ! พบ ${bots.length} บอท`, 'success');
-        }
-      } catch {
-        showToast('ไฟล์ไม่ถูกต้อง', 'error');
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = '';
-  }
-
-  // ========== KEYBOARD SHORTCUTS ==========
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeModal(); closeConfirm(); }
-  });
-
-  document.getElementById('bot-modal').addEventListener('click', e => {
-    if (e.target === document.getElementById('bot-modal')) closeModal();
-  });
-  document.getElementById('confirm-dialog').addEventListener('click', e => {
-    if (e.target === document.getElementById('confirm-dialog')) closeConfirm();
-  });
-
-  // ========== INIT ==========
-  loadFromStorage();
-  renderBots();
-  document.getElementById('nav-log-count').textContent = activityLog.length;
-
-  // ตรวจสอบ WebSocket Support
-  if (typeof WebSocket === 'undefined') {
-    showToast('❌ เบราว์เซอร์ของคุณไม่รองรับ WebSocket', 'error');
-  } else {
-    showToast('✅ พร้อมใช้งาน (เชื่อมต่อ Discord โดยตรง)', 'success');
-    document.querySelector('.connection-status .dot').classList.add('online');
-    document.querySelector('.connection-status span:last-child').textContent = 'พร้อมใช้งาน (WebSocket)';
-  }
-
-  console.log('🎙️ VoiceBot Hub v2.0 - Discord Direct Connection');
-  console.log(`📊 มีบอท ${bots.length} ตัว`);
-  
-</script>
-
+<!-- ===== ANTI-DEBUG OVERLAY ===== -->
+<div id="anti-debug-overlay">
+  <i class="ti ti-alert-triangle"></i>
+  <h2>⚠️ ตรวจพบการเปิดเครื่องมือพัฒนา</h2>
+  <p>เพื่อความปลอดภัย กรุณาปิด DevTools และรีเฟรชหน้าเว็บ</p>
+  <button onclick="location.reload()">🔄 รีเฟรชหน้า</button>
+</div>
+
+<!-- ===== APP ===== -->
 <div class="app">
   <!-- SIDEBAR -->
   <aside class="sidebar">
@@ -1236,7 +647,6 @@
 
   <!-- MAIN -->
   <div class="main">
-    <!-- TOPBAR -->
     <div class="topbar">
       <div>
         <div class="topbar-title" id="page-title">บอทของฉัน</div>
@@ -1255,9 +665,7 @@
       </div>
     </div>
 
-    <!-- CONTENT -->
     <div class="content">
-
       <!-- STATS -->
       <div class="stats-grid">
         <div class="stat-card">
@@ -1312,7 +720,7 @@
       </div>
 
       <!-- ACTIVITY PAGE -->
-      <div class="log-page" id="activity-page" style="display:none;">
+      <div class="log-page" id="activity-page">
         <div class="section-header">
           <div>
             <div class="section-title">ประวัติกิจกรรม</div>
@@ -1321,7 +729,7 @@
           <button class="btn btn-outline btn-sm" onclick="clearLog()"><i class="ti ti-trash"></i> ล้างประวัติ</button>
         </div>
         <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
-          <div style="display:grid;grid-template-columns:130px 100px 1fr;padding:10px 16px;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;font-weight:600;border-bottom:1px solid var(--border);background:var(--bg3);gap:16px;align-items:center;">
+          <div class="log-row header">
             <div>เวลา</div>
             <div>ประเภท</div>
             <div>รายละเอียด</div>
@@ -1333,30 +741,26 @@
       </div>
 
       <!-- SETTINGS PAGE -->
-      <div class="settings-page" id="settings-page" style="display:none;">
-        <div class="settings-section" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:16px;">
-          <div style="font-size:14px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
-            <i class="ti ti-lock" style="color:var(--purple2);font-size:18px;"></i> ความปลอดภัย
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);">
+      <div class="settings-page" id="settings-page">
+        <div class="settings-section">
+          <div class="settings-section-title"><i class="ti ti-lock"></i> ความปลอดภัย</div>
+          <div class="toggle-row">
             <div>
-              <div style="font-size:14px;">ซ่อนโทเคนเสมอ</div>
-              <div style="font-size:12px;color:var(--text3);">ปิดบังโทเคนในหน้าบอท</div>
+              <div class="toggle-label">ซ่อนโทเคนเสมอ</div>
+              <div class="toggle-sub">ปิดบังโทเคนในหน้าบอท</div>
             </div>
             <div class="toggle on" onclick="this.classList.toggle('on')"></div>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);">
+          <div class="toggle-row">
             <div>
-              <div style="font-size:14px;">บันทึกข้อมูลในเบราว์เซอร์</div>
-              <div style="font-size:12px;color:var(--text3);">เก็บข้อมูลบอทใน localStorage</div>
+              <div class="toggle-label">บันทึกข้อมูลในเบราว์เซอร์</div>
+              <div class="toggle-sub">เก็บข้อมูลบอทใน localStorage</div>
             </div>
             <div class="toggle on" id="localstorage-toggle" onclick="toggleLocalStorage(this)"></div>
           </div>
         </div>
-        <div class="settings-section" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:16px;">
-          <div style="font-size:14px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
-            <i class="ti ti-database" style="color:var(--purple2);font-size:18px;"></i> ข้อมูล
-          </div>
+        <div class="settings-section">
+          <div class="settings-section-title"><i class="ti ti-database"></i> ข้อมูล</div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
             <button class="btn btn-outline btn-sm" onclick="exportData()"><i class="ti ti-download"></i> Export JSON</button>
             <button class="btn btn-outline btn-sm" onclick="document.getElementById('import-input').click()"><i class="ti ti-upload"></i> Import JSON</button>
@@ -1367,10 +771,8 @@
             แนะนำ Export สำรองข้อมูลไว้เป็นระยะ
           </p>
         </div>
-        <div class="settings-section" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;">
-          <div style="font-size:14px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
-            <i class="ti ti-info-circle" style="color:var(--purple2);font-size:18px;"></i> ข้อมูลระบบ
-          </div>
+        <div class="settings-section">
+          <div class="settings-section-title"><i class="ti ti-info-circle"></i> ข้อมูลระบบ</div>
           <div style="font-size:13px;color:var(--text2);line-height:1.8;">
             <p>🔗 <strong>เชื่อมต่อแบบ WebSocket Direct</strong> ไปยัง Discord Gateway</p>
             <p>🔒 <strong>ไม่ต้องมี Backend Server</strong> - ทำงานในเบราว์เซอร์โดยตรง</p>
@@ -1384,7 +786,7 @@
   </div>
 </div>
 
-<!-- MODAL -->
+<!-- ===== MODAL ===== -->
 <div class="modal-backdrop" id="bot-modal">
   <div class="modal">
     <div class="modal-header">
@@ -1447,7 +849,7 @@
   </div>
 </div>
 
-<!-- CONFIRM DIALOG -->
+<!-- ===== CONFIRM DIALOG ===== -->
 <div class="confirm-dialog" id="confirm-dialog">
   <div class="confirm-box">
     <div class="confirm-icon"><i class="ti ti-alert-triangle"></i></div>
@@ -1460,11 +862,819 @@
   </div>
 </div>
 
-<!-- TOAST -->
+<!-- ===== TOAST ===== -->
 <div class="toast-container" id="toast-container"></div>
 
-<!-- Anti-debug watermark -->
-<div class="debug-protection">🔒 Protected</div>
+<!-- ===== MAIN SCRIPT ===== -->
+<script>
+// ============================================================
+//  ANTI-INSPECT - ป้องกันการอ่านโค้ดทุกช่องทาง
+// ============================================================
 
+(function antiInspect() {
+  'use strict';
+  
+  // 1. ป้องกันคลิกขวา
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  }, true);
+
+  // 2. ป้องกัน F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+  document.addEventListener('keydown', function(e) {
+    const key = e.key;
+    const ctrl = e.ctrlKey || e.metaKey;
+    const shift = e.shiftKey;
+    
+    if (key === 'F12' ||
+        (ctrl && shift && (key === 'I' || key === 'J')) ||
+        (ctrl && key === 'U') ||
+        (ctrl && shift && key === 'C') ||
+        (ctrl && key === 'S') ||
+        (ctrl && key === 'P') ||
+        key === 'PrintScreen') {
+      e.preventDefault();
+      e.stopPropagation();
+      showToast('⚠️ ไม่สามารถเปิดเครื่องมือพัฒนาได้', 'error');
+      return false;
+    }
+  }, true);
+
+  // 3. ป้องกันการเลือกข้อความ
+  document.addEventListener('selectstart', function(e) {
+    e.preventDefault();
+    return false;
+  }, true);
+
+  // 4. ป้องกันการ drag
+  document.addEventListener('dragstart', function(e) {
+    e.preventDefault();
+    return false;
+  }, true);
+
+  // 5. ป้องกันการ copy
+  document.addEventListener('copy', function(e) {
+    e.preventDefault();
+    showToast('⚠️ ไม่สามารถคัดลอกได้', 'error');
+    return false;
+  }, true);
+
+  // 6. ป้องกันการ paste
+  document.addEventListener('paste', function(e) {
+    e.preventDefault();
+    return false;
+  }, true);
+
+  // 7. ตรวจจับ DevTools ผ่าน console.log
+  let devtoolsOpen = false;
+  const element = new Image();
+  Object.defineProperty(element, 'id', {
+    get: function() {
+      devtoolsOpen = true;
+      document.getElementById('anti-debug-overlay').classList.add('show');
+    }
+  });
+  
+  // ใช้ requestAnimationFrame ตรวจจับ
+  let frameCount = 0;
+  function detectDevTools() {
+    frameCount++;
+    if (frameCount > 100) {
+      console.log('%c', element);
+      frameCount = 0;
+    }
+    requestAnimationFrame(detectDevTools);
+  }
+  requestAnimationFrame(detectDevTools);
+
+  // 8. ตรวจจับการ resize (DevTools มักจะเปลี่ยนขนาด)
+  let lastWidth = window.outerWidth;
+  let lastHeight = window.outerHeight;
+  
+  setInterval(function() {
+    const w = window.outerWidth;
+    const h = window.outerHeight;
+    if (Math.abs(w - lastWidth) > 100 || Math.abs(h - lastHeight) > 100) {
+      // อาจเป็น DevTools
+    }
+    lastWidth = w;
+    lastHeight = h;
+  }, 2000);
+
+  // 9. ป้องกันการเปิด Source Map
+  Object.defineProperty(window, 'sourceMap', {
+    get: function() {
+      document.getElementById('anti-debug-overlay').classList.add('show');
+      return null;
+    }
+  });
+
+  // 10. ฆ่า console.log ทุกอัน
+  const originalLog = console.log;
+  const originalWarn = console.warn;
+  const originalError = console.error;
+  const originalInfo = console.info;
+  
+  console.log = function() {};
+  console.warn = function() {};
+  console.error = function() {};
+  console.info = function() {};
+  console.debug = function() {};
+  console.trace = function() {};
+  
+  // แต่เก็บไว้ใช้เอง
+  window._consoleLog = originalLog;
+  
+  console.log('🔒 Protected Mode Active');
+})();
+
+// ============================================================
+//  DATA STORE
+// ============================================================
+
+let bots = [];
+let activityLog = [];
+let editingId = null;
+let confirmCallback = null;
+let uptimeIntervals = {};
+let wsConnections = {};
+
+function genId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}
+
+function loadFromStorage() {
+  try {
+    const saved = localStorage.getItem('voicebot_hub_bots');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) bots = parsed;
+    }
+    bots.forEach(b => {
+      if (!b.status) b.status = 'stopped';
+      if (!b.uptime) b.uptime = 0;
+      if (!b.logs) b.logs = [];
+    });
+    const log = localStorage.getItem('voicebot_hub_log');
+    if (log) {
+      const parsedLog = JSON.parse(log);
+      if (Array.isArray(parsedLog)) activityLog = parsedLog;
+    }
+  } catch(e) {}
+}
+
+function saveToStorage() {
+  try {
+    localStorage.setItem('voicebot_hub_bots', JSON.stringify(bots));
+    localStorage.setItem('voicebot_hub_log', JSON.stringify(activityLog.slice(0, 200)));
+  } catch(e) {}
+}
+
+// ============================================================
+//  DISCORD WEBSOCKET - เหมือนโค้ด voiceonline ทุกประการ
+// ============================================================
+
+function createVoiceConnection(bot) {
+  const { token, guildId, channelId, selfMute, selfDeaf } = bot;
+  const id = bot.id;
+
+  if (wsConnections[id]) {
+    try { wsConnections[id].close(); } catch(_) {}
+    delete wsConnections[id];
+  }
+
+  return new Promise((resolve, reject) => {
+    const ws = new WebSocket('wss://gateway.discord.gg/?v=10&encoding=json');
+    let heartbeatInterval, heartbeatWatchdog, voiceStateKeepalive;
+    let isAuthenticated = false;
+    let lastHeartbeatAck = Date.now();
+    let resolved = false;
+
+    const connTimeout = setTimeout(() => {
+      try { ws.close(); } catch(_) {}
+      if (!resolved) reject(new Error('Connection timeout'));
+    }, 15000);
+
+    const sendVoiceState = () => {
+      try {
+        ws.send(JSON.stringify({
+          op: 4,
+          d: {
+            guild_id: guildId,
+            channel_id: channelId,
+            self_mute: String(selfMute) === 'true',
+            self_deaf: String(selfDeaf) === 'true'
+          }
+        }));
+      } catch(_) {}
+    };
+
+    ws.onopen = function() {
+      // เปิด connection
+    };
+
+    ws.onmessage = function(event) {
+      try {
+        const data = JSON.parse(event.data);
+        const { op, d, t } = data;
+
+        if (op === 11) {
+          lastHeartbeatAck = Date.now();
+        }
+
+        if (op === 10) {
+          clearTimeout(connTimeout);
+          const interval = d.heartbeat_interval;
+          
+          heartbeatInterval = setInterval(() => {
+            try { ws.send(JSON.stringify({ op: 1, d: null })); } catch(_) {}
+          }, interval);
+          
+          heartbeatWatchdog = setInterval(() => {
+            if (Date.now() - lastHeartbeatAck > interval * 2.5) {
+              try { ws.close(4000); } catch(_) {}
+            }
+          }, interval);
+          
+          // Identify - เหมือน voiceonline
+          ws.send(JSON.stringify({
+            op: 2,
+            d: {
+              token: token,
+              properties: {
+                $os: 'linux',
+                $browser: 'discord.js',
+                $device: 'discord.js'
+              },
+              intents: 1 << 7
+            }
+          }));
+        }
+
+        if (op === 0 && t === 'READY') {
+          isAuthenticated = true;
+          wsConnections[id] = ws;
+          voiceStateKeepalive = setInterval(sendVoiceState, 4 * 60 * 1000);
+          sendVoiceState();
+          if (!resolved) {
+            resolved = true;
+            resolve(ws);
+          }
+        }
+
+        if (op === 0 && t === 'VOICE_STATE_UPDATE' && isAuthenticated) {
+          if (d?.guild_id === guildId && d.channel_id !== channelId) {
+            setTimeout(sendVoiceState, 800);
+          }
+        }
+
+        if (op === 7) {
+          try { ws.close(4000); } catch(_) {}
+        }
+        
+        if (op === 9) {
+          try { ws.close(); } catch(_) {}
+          if (!resolved) reject(new Error('Token ไม่ถูกต้องหรือหมดอายุ'));
+        }
+      } catch(err) {
+        // ignore
+      }
+    };
+
+    ws.onclose = function(event) {
+      clearTimeout(connTimeout);
+      if (heartbeatInterval) clearInterval(heartbeatInterval);
+      if (heartbeatWatchdog) clearInterval(heartbeatWatchdog);
+      if (voiceStateKeepalive) clearInterval(voiceStateKeepalive);
+      delete wsConnections[id];
+      
+      if (bot.status === 'running') {
+        bot.status = 'stopped';
+        bot.uptime = 0;
+        addLog(bot, 'warn', '❌ การเชื่อมต่อหลุด (Code: ' + event.code + ')');
+        showToast(`${bot.name} หลุดจากการเชื่อมต่อ`, 'error');
+        renderBots();
+        saveToStorage();
+      }
+      
+      if (!resolved && event.code !== 1000) {
+        reject(new Error('Connection closed - Code: ' + event.code));
+      }
+    };
+
+    ws.onerror = function(error) {
+      if (!resolved) {
+        clearTimeout(connTimeout);
+        reject(error);
+      }
+    };
+  });
+}
+
+// ============================================================
+//  BOT ACTIONS
+// ============================================================
+
+async function startBot(id) {
+  const bot = bots.find(b => b.id === id);
+  if (!bot) return;
+  if (!bot.token || !bot.channelId || !bot.guildId) {
+    showToast('กรุณาตั้งค่า Token, Guild ID และ Channel ID ก่อน', 'error');
+    return;
+  }
+
+  bot.status = 'connecting';
+  renderBots();
+  addLog(bot, 'info', '🔄 กำลังเชื่อมต่อ Discord...');
+
+  try {
+    await createVoiceConnection(bot);
+    bot.status = 'running';
+    bot.startTime = Date.now();
+    bot.uptime = 0;
+    startUptimeCounter(id);
+    addLog(bot, 'ok', `✅ เชื่อมต่อสำเร็จ! เข้าช่องเสียง ${bot.channelId}`);
+    addActivity('join', `${bot.name} เข้าช่องเสียง`, bot.channelId);
+    showToast(`${bot.name} เชื่อมต่อสำเร็จ! ✅`, 'success');
+  } catch (err) {
+    bot.status = 'stopped';
+    addLog(bot, 'err', `❌ เชื่อมต่อล้มเหลว: ${err.message}`);
+    showToast(`เชื่อมต่อ ${bot.name} ล้มเหลว: ${err.message}`, 'error');
+  }
+
+  renderBots();
+  saveToStorage();
+}
+
+function stopBot(id) {
+  const bot = bots.find(b => b.id === id);
+  if (!bot) return;
+  
+  clearInterval(uptimeIntervals[id]);
+  delete uptimeIntervals[id];
+  
+  if (wsConnections[id]) {
+    try { wsConnections[id].close(1000, 'User stopped'); } catch(_) {}
+    delete wsConnections[id];
+  }
+  
+  bot.status = 'stopped';
+  bot.uptime = 0;
+  addLog(bot, 'warn', '⏹ ออกจากช่องเสียงแล้ว');
+  addActivity('leave', `${bot.name} ออกจากช่องเสียง`, bot.channelId || '-');
+  showToast(`${bot.name} หยุดทำงานแล้ว`, 'info');
+  
+  renderBots();
+  saveToStorage();
+}
+
+function startUptimeCounter(id) {
+  uptimeIntervals[id] = setInterval(() => {
+    const bot = bots.find(b => b.id === id);
+    if (!bot || bot.status !== 'running') {
+      clearInterval(uptimeIntervals[id]);
+      return;
+    }
+    bot.uptime = Math.floor((Date.now() - bot.startTime) / 1000);
+    const el = document.querySelector(`#bot-card-${id} .bot-uptime`);
+    if (el) el.textContent = '⏱ ' + formatUptime(bot.uptime);
+  }, 1000);
+}
+
+function startAllBots() {
+  const stopped = bots.filter(b => b.status === 'stopped');
+  if (stopped.length === 0) { showToast('ไม่มีบอทที่ต้องเริ่ม', 'info'); return; }
+  stopped.forEach((b, i) => setTimeout(() => startBot(b.id), i * 400));
+}
+
+function stopAllBots() {
+  const running = bots.filter(b => b.status === 'running');
+  if (running.length === 0) { showToast('ไม่มีบอทที่กำลังทำงาน', 'info'); return; }
+  running.forEach(b => stopBot(b.id));
+}
+
+// ============================================================
+//  RENDER
+// ============================================================
+
+function getInitials(name) {
+  if (!name) return '??';
+  return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+}
+
+function maskToken(token) {
+  if (!token) return '-';
+  if (token.length < 12) return '••••••••';
+  return token.slice(0, 8) + '•'.repeat(10) + token.slice(-4);
+}
+
+function formatUptime(s) {
+  if (!s || s < 0) return '0วิ';
+  if (s < 60) return s + 'วิ';
+  if (s < 3600) return Math.floor(s/60) + 'น.';
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60);
+  return h + 'ชม.' + (m ? m + 'น.' : '');
+}
+
+function stringToColor(str) {
+  if (!str) return '#7c6ff7';
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  const colors = ['#7c6ff7','#5b8af0','#3dd68c','#f5a623','#f25656','#c471ed','#44b3f8'];
+  return colors[Math.abs(hash) % colors.length];
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderBots() {
+  const grid = document.getElementById('bots-grid');
+  const empty = document.getElementById('empty-state');
+  updateStats();
+
+  if (bots.length === 0) {
+    empty.style.display = '';
+    grid.innerHTML = '';
+    grid.appendChild(empty);
+    return;
+  }
+  empty.style.display = 'none';
+
+  const cards = bots.map(bot => {
+    const statusClass = bot.status || 'stopped';
+    const statusLabel = { running: '🟢 ออนไลน์', stopped: '⚫ หยุด', connecting: '🟡 กำลังเชื่อมต่อ' }[statusClass] || 'หยุด';
+    const initials = getInitials(bot.name);
+    const dotClass = { running: 'online', stopped: 'offline', connecting: 'connecting' }[statusClass];
+    const uptime = bot.uptime > 0 ? formatUptime(bot.uptime) : null;
+
+    return `
+    <div class="bot-card ${statusClass}" id="bot-card-${bot.id}">
+      <div class="bot-header">
+        <div class="bot-avatar" style="background:${stringToColor(bot.name)}">
+          ${initials}
+          <div class="status-dot ${dotClass}"></div>
+        </div>
+        <div class="bot-info">
+          <div class="bot-name">${escHtml(bot.name)}</div>
+          <div class="bot-id">${bot.guildId ? 'Guild: ' + bot.guildId : 'ยังไม่ได้ตั้งค่า'}</div>
+        </div>
+        <div class="status-badge ${statusClass}">
+          <div class="dot ${statusClass === 'connecting' ? 'pulse' : ''}"></div>
+          ${statusLabel}
+        </div>
+      </div>
+
+      <div class="bot-fields">
+        <div class="bot-field">
+          <div class="bot-field-label">🔑 Bot Token</div>
+          <div class="bot-field-val">${maskToken(bot.token)}</div>
+        </div>
+        <div class="bot-field">
+          <div class="bot-field-label">🔊 Voice Channel</div>
+          <div class="bot-field-val">${bot.channelId || 'ยังไม่ได้ระบุ'}</div>
+        </div>
+        <div class="bot-field">
+          <div class="bot-field-label">🔇 Mute</div>
+          <div class="bot-field-val">${bot.selfMute === 'false' ? 'เปิดเสียง' : 'ปิดเสียง'}</div>
+        </div>
+        <div class="bot-field">
+          <div class="bot-field-label">🔊 Deaf</div>
+          <div class="bot-field-val">${bot.selfDeaf === 'false' ? 'ไม่ปิด' : 'ปิดหูฟัง'}</div>
+        </div>
+      </div>
+
+      <div class="bot-actions">
+        ${statusClass === 'running'
+          ? `<button class="btn btn-danger btn-sm" onclick="stopBot('${bot.id}')"><i class="ti ti-player-stop"></i> หยุด</button>`
+          : statusClass === 'connecting'
+          ? `<button class="btn btn-outline btn-sm" disabled style="opacity:0.5"><i class="ti ti-loader-2"></i> กำลังเชื่อมต่อ...</button>`
+          : `<button class="btn btn-success btn-sm" onclick="startBot('${bot.id}')"><i class="ti ti-player-play"></i> เริ่ม</button>`}
+        <button class="btn btn-outline btn-sm" onclick="editBot('${bot.id}')"><i class="ti ti-edit"></i> แก้ไข</button>
+        ${uptime ? `<div class="bot-uptime">⏱ ${uptime}</div>` : ''}
+        <button class="btn btn-outline btn-sm" onclick="confirmDelete('${bot.id}')" style="margin-left:auto;color:var(--red);border-color:var(--red-dim)"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+
+  grid.innerHTML = cards;
+}
+
+function updateStats() {
+  const total = bots.length;
+  const online = bots.filter(b => b.status === 'running').length;
+  const connecting = bots.filter(b => b.status === 'connecting').length;
+  const stopped = bots.filter(b => b.status === 'stopped').length;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-online').textContent = online;
+  document.getElementById('stat-connecting').textContent = connecting;
+  document.getElementById('stat-stopped').textContent = stopped;
+  document.getElementById('nav-online-count').textContent = online;
+}
+
+// ============================================================
+//  MODAL
+// ============================================================
+
+let currentTab = 'bot';
+
+function openAddModal() {
+  editingId = null;
+  document.getElementById('modal-title').textContent = 'เพิ่มบอทใหม่';
+  document.getElementById('save-btn-label').textContent = 'เพิ่มบอท';
+  clearForm();
+  switchTab('bot');
+  document.getElementById('bot-modal').classList.add('open');
+}
+
+function editBot(id) {
+  const bot = bots.find(b => b.id === id);
+  if (!bot) return;
+  editingId = id;
+  document.getElementById('modal-title').textContent = 'แก้ไขบอท';
+  document.getElementById('save-btn-label').textContent = 'บันทึก';
+  document.getElementById('bot-name-input').value = bot.name || '';
+  document.getElementById('bot-token-input').value = bot.token || '';
+  document.getElementById('bot-guild-input').value = bot.guildId || '';
+  document.getElementById('bot-channel-input').value = bot.channelId || '';
+  document.getElementById('bot-mute-input').value = bot.selfMute || 'true';
+  document.getElementById('bot-deaf-input').value = bot.selfDeaf || 'true';
+  switchTab('bot');
+  document.getElementById('bot-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('bot-modal').classList.remove('open');
+}
+
+function clearForm() {
+  ['bot-name-input','bot-token-input','bot-guild-input','bot-channel-input'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('bot-mute-input').value = 'true';
+  document.getElementById('bot-deaf-input').value = 'true';
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-bot').style.display = tab === 'bot' ? '' : 'none';
+  document.getElementById('tab-channel').style.display = tab === 'channel' ? '' : 'none';
+  document.querySelectorAll('.tabs .tab').forEach((el, i) => {
+    el.classList.toggle('active', (i === 0 && tab === 'bot') || (i === 1 && tab === 'channel'));
+  });
+}
+
+function saveBot() {
+  const name = document.getElementById('bot-name-input').value.trim();
+  const token = document.getElementById('bot-token-input').value.trim();
+  const guildId = document.getElementById('bot-guild-input').value.trim();
+  const channelId = document.getElementById('bot-channel-input').value.trim();
+  const selfMute = document.getElementById('bot-mute-input').value;
+  const selfDeaf = document.getElementById('bot-deaf-input').value;
+
+  if (!name) { showToast('กรุณาใส่ชื่อบอท', 'error'); return; }
+  if (!token) { showToast('กรุณาใส่ Bot Token', 'error'); return; }
+  if (!guildId) { showToast('กรุณาใส่ Server ID', 'error'); return; }
+  if (!channelId) { showToast('กรุณาใส่ Voice Channel ID', 'error'); return; }
+
+  if (editingId) {
+    const bot = bots.find(b => b.id === editingId);
+    if (bot) {
+      if (bot.status === 'running') stopBot(bot.id);
+      Object.assign(bot, { name, token, guildId, channelId, selfMute, selfDeaf });
+    }
+    showToast(`แก้ไข ${name} แล้ว`, 'success');
+  } else {
+    const bot = {
+      id: genId(),
+      name,
+      token,
+      guildId,
+      channelId,
+      selfMute,
+      selfDeaf,
+      status: 'stopped',
+      uptime: 0,
+      logs: []
+    };
+    bots.push(bot);
+    showToast(`เพิ่ม ${name} แล้ว! 🎉`, 'success');
+    addActivity('info', `เพิ่มบอทใหม่ ${name}`);
+  }
+
+  saveToStorage();
+  closeModal();
+  renderBots();
+}
+
+// ============================================================
+//  DELETE
+// ============================================================
+
+function confirmDelete(id) {
+  const bot = bots.find(b => b.id === id);
+  confirmCallback = () => deleteBot(id);
+  document.getElementById('confirm-title').textContent = 'ยืนยันการลบ';
+  document.getElementById('confirm-msg').textContent = `คุณต้องการลบบอท "${bot?.name}" ใช่หรือไม่?`;
+  document.getElementById('confirm-dialog').classList.add('open');
+}
+
+function closeConfirm() {
+  document.getElementById('confirm-dialog').classList.remove('open');
+  confirmCallback = null;
+}
+
+function confirmOk() {
+  if (confirmCallback) confirmCallback();
+  closeConfirm();
+}
+
+function deleteBot(id) {
+  const bot = bots.find(b => b.id === id);
+  if (!bot) return;
+  if (bot.status === 'running') stopBot(id);
+  bots = bots.filter(b => b.id !== id);
+  showToast(`ลบ ${bot.name} แล้ว`, 'info');
+  addActivity('info', `ลบบอท ${bot.name}`);
+  saveToStorage();
+  renderBots();
+}
+
+// ============================================================
+//  ACTIVITY LOG
+// ============================================================
+
+function addActivity(type, detail, extra) {
+  activityLog.unshift({
+    time: new Date().toLocaleString('th-TH'),
+    type,
+    detail,
+    extra: extra || ''
+  });
+  if (activityLog.length > 200) activityLog = activityLog.slice(0, 200);
+  document.getElementById('nav-log-count').textContent = activityLog.length;
+  saveToStorage();
+}
+
+function addLog(bot, type, msg) {
+  if (!bot.logs) bot.logs = [];
+  const time = new Date().toLocaleTimeString('th-TH');
+  bot.logs.unshift({ type, msg, time });
+  if (bot.logs.length > 20) bot.logs = bot.logs.slice(0, 20);
+}
+
+function clearLog() {
+  activityLog = [];
+  document.getElementById('nav-log-count').textContent = '0';
+  saveToStorage();
+  showToast('ล้างประวัติแล้ว', 'info');
+}
+
+// ============================================================
+//  TOAST
+// ============================================================
+
+function showToast(msg, type = 'info') {
+  const icons = { success: 'ti-circle-check', error: 'ti-alert-circle', info: 'ti-info-circle' };
+  const tc = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<i class="ti ${icons[type] || 'ti-info-circle'}"></i><span>${escHtml(msg)}</span>`;
+  tc.appendChild(el);
+  setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(40px)';
+    el.style.transition = 'all 0.3s';
+    setTimeout(() => el.remove(), 300);
+  }, 4000);
+}
+
+// ============================================================
+//  PAGE ROUTING
+// ============================================================
+
+function showPage(page) {
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('nav-' + page)?.classList.add('active');
+
+  document.getElementById('bots-page').style.display = page === 'bots' ? 'block' : 'none';
+  document.getElementById('activity-page').style.display = page === 'activity' ? 'block' : 'none';
+  document.getElementById('settings-page').style.display = page === 'settings' ? 'block' : 'none';
+
+  const titles = {
+    bots: ['บอทของฉัน', 'จัดการบอท Discord Voice Channel ทั้งหมด'],
+    activity: ['ประวัติกิจกรรม', 'บันทึกการเชื่อมต่อและเหตุการณ์'],
+    settings: ['ตั้งค่า', 'กำหนดค่าระบบและความปลอดภัย']
+  };
+  document.getElementById('page-title').textContent = titles[page]?.[0] || 'บอทของฉัน';
+  document.getElementById('page-sub').textContent = titles[page]?.[1] || '';
+  document.getElementById('topbar-actions').style.display = page === 'bots' ? '' : 'none';
+  
+  if (page === 'activity') {
+    const body = document.getElementById('activity-log-body');
+    if (activityLog.length === 0) {
+      body.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text3);font-size:13px;">ยังไม่มีประวัติกิจกรรม</div>`;
+    } else {
+      body.innerHTML = activityLog.slice(0, 50).map(l => `
+        <div class="log-row">
+          <div style="color:var(--text3);font-size:12px">${l.time}</div>
+          <div><span class="log-type-badge ${l.type}">${l.type}</span></div>
+          <div style="font-size:13px">${escHtml(l.detail)} ${l.extra ? `<span style="color:var(--text3)">· ${escHtml(l.extra)}</span>` : ''}</div>
+        </div>
+      `).join('');
+    }
+  }
+}
+
+// ============================================================
+//  SETTINGS
+// ============================================================
+
+function toggleLocalStorage(el) {
+  el.classList.toggle('on');
+  if (el.classList.contains('on')) {
+    saveToStorage();
+    showToast('✅ เปิดการบันทึกข้อมูล', 'success');
+  } else {
+    localStorage.removeItem('voicebot_hub_bots');
+    localStorage.removeItem('voicebot_hub_log');
+    showToast('⚠️ ปิดการบันทึกข้อมูล', 'info');
+  }
+}
+
+function exportData() {
+  const data = JSON.stringify({
+    bots: bots.map(b => ({ ...b, status: 'stopped', uptime: 0, logs: [] })),
+    exported: new Date().toISOString()
+  }, null, 2);
+  const a = document.createElement('a');
+  a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(data);
+  a.download = 'voicebot-hub-export.json';
+  a.click();
+  showToast('Export สำเร็จ!', 'success');
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (data.bots && Array.isArray(data.bots)) {
+        bots = data.bots.map(b => ({ ...b, status: 'stopped', uptime: 0, logs: [] }));
+        saveToStorage();
+        renderBots();
+        showToast(`Import สำเร็จ! พบ ${bots.length} บอท`, 'success');
+      }
+    } catch {
+      showToast('ไฟล์ไม่ถูกต้อง', 'error');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// ============================================================
+//  KEYBOARD SHORTCUTS
+// ============================================================
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeModal();
+    closeConfirm();
+  }
+});
+
+document.getElementById('bot-modal').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('bot-modal')) closeModal();
+});
+
+document.getElementById('confirm-dialog').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('confirm-dialog')) closeConfirm();
+});
+
+// ============================================================
+//  INIT
+// ============================================================
+
+loadFromStorage();
+renderBots();
+document.getElementById('nav-log-count').textContent = activityLog.length;
+
+// ตรวจสอบ WebSocket
+if (typeof WebSocket !== 'undefined') {
+  document.getElementById('status-dot').className = 'dot online';
+  document.getElementById('status-text').textContent = 'พร้อมใช้งาน (WebSocket)';
+  document.getElementById('server-status').textContent = '✅ WebSocket Ready';
+} else {
+  showToast('❌ เบราว์เซอร์ไม่รองรับ WebSocket', 'error');
+}
+
+console.log('🎙️ VoiceBot Hub v2.0 - Discord Direct Connection');
+console.log(`📊 มีบอท ${bots.length} ตัว`);
+</script>
 </body>
 </html>
