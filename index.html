@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Discord Voice Bot Manager</title>
+<title>Voice Bot Manager - Discord</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
 <style>
   :root {
@@ -34,7 +34,7 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
@@ -61,7 +61,6 @@
     z-index: 0;
   }
 
-  /* LAYOUT */
   .app { position: relative; z-index: 1; display: flex; min-height: 100vh; }
 
   /* SIDEBAR */
@@ -121,6 +120,7 @@
     font-weight: 600;
   }
   .nav-badge.green { background: var(--green-dim); color: var(--green); }
+  .nav-badge.red { background: var(--red-dim); color: var(--red); }
 
   .sidebar-footer {
     padding: 16px;
@@ -227,6 +227,8 @@
   .section-header {
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
   }
   .section-title { font-size: 15px; font-weight: 600; }
   .section-sub { font-size: 13px; color: var(--text2); margin-top: 1px; }
@@ -275,12 +277,6 @@
     font-weight: 700;
     flex-shrink: 0;
     position: relative;
-  }
-  .bot-avatar-img {
-    width: 42px; height: 42px;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
   }
   .status-dot {
     position: absolute;
@@ -333,8 +329,27 @@
   .bot-field-val.token { font-family: monospace; color: var(--purple2); }
   .bot-field-val.empty { color: var(--text3); font-style: italic; }
 
-  .bot-actions { display: flex; gap: 8px; align-items: center; }
+  .bot-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .bot-uptime { margin-left: auto; font-size: 12px; color: var(--text3); }
+
+  .bot-commands {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .cmd-btn {
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    background: var(--bg4);
+    color: var(--text2);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .cmd-btn:hover { background: var(--purple-dim); color: var(--purple2); border-color: var(--purple); }
 
   /* LOG BOX */
   .log-box {
@@ -378,6 +393,8 @@
     box-shadow: var(--shadow);
     transform: translateY(16px);
     transition: transform 0.2s;
+    max-height: 90vh;
+    overflow-y: auto;
   }
   .modal-backdrop.open .modal { transform: translateY(0); }
   .modal-header {
@@ -500,6 +517,7 @@
     display: flex; align-items: center; gap: 10px;
     font-size: 13px;
     min-width: 280px;
+    max-width: 420px;
     box-shadow: var(--shadow);
     animation: slideIn 0.25s ease;
   }
@@ -615,6 +633,26 @@
   .bots-page { display: block; }
   .bots-page.hidden { display: none; }
 
+  /* CONNECTION STATUS BAR */
+  .connection-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: var(--bg3);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    color: var(--text2);
+  }
+  .connection-status .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .connection-status .dot.online { background: var(--green); }
+  .connection-status .dot.offline { background: var(--text3); }
+  .connection-status .dot.connecting { background: var(--amber); animation: pulse 1.5s infinite; }
+
   /* RESPONSIVE */
   @media (max-width: 900px) {
     .sidebar { width: 200px; }
@@ -626,9 +664,10 @@
     .main { margin-left: 0; }
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
     .bot-fields { grid-template-columns: 1fr; }
+    .log-row { grid-template-columns: 1fr; gap: 4px; }
+    .log-row.header { display: none; }
   }
 
-  /* SCROLLBAR */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
@@ -641,6 +680,16 @@
   }
 
   .hidden { display: none !important; }
+
+  .cmd-help {
+    font-size: 11px;
+    color: var(--text3);
+    padding: 4px 10px;
+    background: var(--bg4);
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    margin-top: 4px;
+  }
 </style>
 </head>
 <body>
@@ -669,14 +718,13 @@
       <div class="nav-item" onclick="showPage('settings')" id="nav-settings">
         <i class="ti ti-settings"></i> ตั้งค่า
       </div>
-      <div class="nav-item" onclick="openDocs()">
-        <i class="ti ti-book"></i> คู่มือการใช้งาน
-        <i class="ti ti-external-link" style="margin-left:auto;font-size:13px;opacity:0.5"></i>
+      <div class="nav-item" onclick="showPage('commands')" id="nav-commands">
+        <i class="ti ti-terminal"></i> คำสั่ง Discord
       </div>
     </nav>
     <div class="sidebar-footer">
-      VoiceBot Hub v1.0<br>
-      <a href="https://github.com" target="_blank">Deploy on GitHub Pages</a>
+      VoiceBot Hub v2.0<br>
+      <span id="server-status">🔄 กำลังเชื่อมต่อ...</span>
     </div>
   </aside>
 
@@ -689,9 +737,15 @@
         <div class="topbar-sub" id="page-sub">จัดการบอท Discord Voice Channel ทั้งหมด</div>
       </div>
       <div id="topbar-actions">
-        <button class="btn btn-primary" onclick="openAddModal()">
-          <i class="ti ti-plus"></i> เพิ่มบอท
-        </button>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <div class="connection-status" id="connection-status">
+            <span class="dot offline" id="status-dot"></span>
+            <span id="status-text">ไม่เชื่อมต่อ</span>
+          </div>
+          <button class="btn btn-primary" onclick="openAddModal()">
+            <i class="ti ti-plus"></i> เพิ่มบอท
+          </button>
+        </div>
       </div>
     </div>
 
@@ -737,13 +791,13 @@
             <div class="section-title">รายการบอท</div>
             <div class="section-sub">คลิก <strong>เริ่ม</strong> เพื่อให้บอทเข้าช่องเสียง</div>
           </div>
-          <div style="display:flex;gap:8px;align-items:center">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
             <button class="btn btn-outline btn-sm" onclick="startAllBots()"><i class="ti ti-player-play"></i> เริ่มทั้งหมด</button>
             <button class="btn btn-outline btn-sm" onclick="stopAllBots()"><i class="ti ti-player-stop"></i> หยุดทั้งหมด</button>
+            <button class="btn btn-outline btn-sm" onclick="syncWithBot()"><i class="ti ti-refresh"></i> ซิงค์สถานะ</button>
           </div>
         </div>
         <div class="bots-grid" id="bots-grid">
-          <!-- empty state -->
           <div class="empty-state" id="empty-state">
             <i class="ti ti-robot"></i>
             <h3>ยังไม่มีบอท</h3>
@@ -779,6 +833,23 @@
       <!-- SETTINGS PAGE -->
       <div class="settings-page" id="settings-page">
         <div class="settings-section">
+          <div class="settings-section-title"><i class="ti ti-server"></i> การเชื่อมต่อ</div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">เชื่อมต่ออัตโนมัติเมื่อเปิดหน้า</div>
+              <div class="toggle-sub">ดึงสถานะบอทจากเซิร์ฟเวอร์อัตโนมัติ</div>
+            </div>
+            <div class="toggle on" id="auto-connect-toggle" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Auto-Restore (เริ่มออนอัตโนมัติ)</div>
+              <div class="toggle-sub">เมื่อบอทเริ่มทำงานใหม่จะเชื่อมต่ออัตโนมัติ</div>
+            </div>
+            <div class="toggle on" id="auto-restore-toggle" onclick="this.classList.toggle('on')"></div>
+          </div>
+        </div>
+        <div class="settings-section">
           <div class="settings-section-title"><i class="ti ti-bell"></i> การแจ้งเตือน</div>
           <div class="toggle-row">
             <div>
@@ -793,13 +864,6 @@
               <div class="toggle-sub">แจ้งเตือนเมื่อบอทหลุดจากช่องเสียง</div>
             </div>
             <div class="toggle on" onclick="this.classList.toggle('on')"></div>
-          </div>
-          <div class="toggle-row">
-            <div>
-              <div class="toggle-label">เชื่อมต่อใหม่อัตโนมัติ</div>
-              <div class="toggle-sub">พยายามเชื่อมต่อใหม่เมื่อหลุด</div>
-            </div>
-            <div class="toggle" onclick="this.classList.toggle('on')"></div>
           </div>
         </div>
         <div class="settings-section">
@@ -830,6 +894,41 @@
             ข้อมูลทั้งหมดจะถูกเก็บไว้ในเบราว์เซอร์เท่านั้น ไม่มีการส่งข้อมูลไปยังเซิร์ฟเวอร์ภายนอก<br>
             แนะนำ Export สำรองข้อมูลไว้เป็นระยะ
           </p>
+        </div>
+      </div>
+
+      <!-- COMMANDS PAGE -->
+      <div class="settings-page" id="commands-page" style="display:none;">
+        <div class="settings-section">
+          <div class="settings-section-title"><i class="ti ti-terminal"></i> คำสั่ง Discord</div>
+          <div style="margin-bottom:16px;">
+            <div style="background:var(--bg3);border-radius:var(--radius-sm);padding:12px 16px;border:1px solid var(--border);font-family:monospace;font-size:13px;color:var(--purple2);">
+              /voiceonline
+            </div>
+            <div class="cmd-help">📌 ส่งเมนูจัดการ Voice Online ไปยังช่องที่เลือก (Admin เท่านั้น)</div>
+          </div>
+          <div style="margin-bottom:16px;">
+            <div style="background:var(--bg3);border-radius:var(--radius-sm);padding:12px 16px;border:1px solid var(--border);font-family:monospace;font-size:13px;color:var(--purple2);">
+              /ping
+            </div>
+            <div class="cmd-help">📌 ทดสอบความหน่วงของบอท</div>
+          </div>
+          <div style="margin-bottom:16px;">
+            <div style="background:var(--bg3);border-radius:var(--radius-sm);padding:12px 16px;border:1px solid var(--border);font-family:monospace;font-size:13px;color:var(--purple2);">
+              /status
+            </div>
+            <div class="cmd-help">📌 ดูสถานะการเชื่อมต่อ Voice ของบอท</div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title"><i class="ti ti-info-circle"></i> วิธีการใช้งาน</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.8;">
+            <p>1. ใช้คำสั่ง <code style="background:var(--bg3);padding:2px 8px;border-radius:4px;color:var(--purple2);">/voiceonline</code> เพื่อส่งเมนูไปยังช่องที่ต้องการ</p>
+            <p>2. ในเมนูให้คลิก <strong>"ตั้งค่าข้อมูล"</strong> เพื่อกรอกโทเค่น, Server ID, Voice Channel ID</p>
+            <p>3. เมื่อตั้งค่าเสร็จ คลิก <strong>"จัดการออนช่องเสียง"</strong> เพื่อเริ่ม/หยุดการเชื่อมต่อ</p>
+            <p>4. ระบบมี <strong>Auto-Restore</strong> เมื่อบอทเริ่มใหม่จะเชื่อมต่ออัตโนมัติ</p>
+            <p style="margin-top:8px;color:var(--text3);">⚠️ โทเค่นจะถูกเก็บไว้ในเครื่องคุณเท่านั้น</p>
+          </div>
         </div>
       </div>
 
@@ -935,6 +1034,9 @@ let activityLog = [];
 let editingId = null;
 let confirmCallback = null;
 let uptimeIntervals = {};
+let botStatusCache = {};
+
+const API_BASE = ''; // ใส่ URL backend ถ้ามี
 
 function genId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -943,18 +1045,29 @@ function genId() {
 function loadFromStorage() {
   try {
     const saved = localStorage.getItem('voicebot_hub_bots');
-    if (saved) bots = JSON.parse(saved);
-    bots.forEach(b => { b.status = 'stopped'; b.uptime = 0; });
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // ตรวจสอบว่าเป็น array
+      if (Array.isArray(parsed)) bots = parsed;
+    }
+    bots.forEach(b => {
+      if (!b.status) b.status = 'stopped';
+      if (!b.uptime) b.uptime = 0;
+      if (!b.logs) b.logs = [];
+    });
     const log = localStorage.getItem('voicebot_hub_log');
-    if (log) activityLog = JSON.parse(log);
-  } catch(e) {}
+    if (log) {
+      const parsedLog = JSON.parse(log);
+      if (Array.isArray(parsedLog)) activityLog = parsedLog;
+    }
+  } catch(e) { console.warn('Load from storage error:', e); }
 }
 
 function saveToStorage() {
   try {
     localStorage.setItem('voicebot_hub_bots', JSON.stringify(bots));
     localStorage.setItem('voicebot_hub_log', JSON.stringify(activityLog.slice(0, 200)));
-  } catch(e) {}
+  } catch(e) { console.warn('Save to storage error:', e); }
 }
 
 /* ============================
@@ -970,15 +1083,17 @@ function showPage(page) {
   document.getElementById('bots-page').style.display = page === 'bots' ? 'block' : 'none';
   document.getElementById('activity-page').style.display = page === 'activity' ? 'block' : 'none';
   document.getElementById('settings-page').style.display = page === 'settings' ? 'block' : 'none';
+  document.getElementById('commands-page').style.display = page === 'commands' ? 'block' : 'none';
   document.getElementById('stats-grid').style.display = page === 'bots' ? '' : 'none';
 
   const titles = {
     bots: ['บอทของฉัน', 'จัดการบอท Discord Voice Channel ทั้งหมด'],
     activity: ['ประวัติกิจกรรม', 'บันทึกการเชื่อมต่อและเหตุการณ์'],
-    settings: ['ตั้งค่า', 'กำหนดค่าระบบและความปลอดภัย']
+    settings: ['ตั้งค่า', 'กำหนดค่าระบบและความปลอดภัย'],
+    commands: ['คำสั่ง Discord', 'คำสั่ง Slash Command และวิธีการใช้งาน']
   };
-  document.getElementById('page-title').textContent = titles[page][0];
-  document.getElementById('page-sub').textContent = titles[page][1];
+  document.getElementById('page-title').textContent = titles[page]?.[0] || 'บอทของฉัน';
+  document.getElementById('page-sub').textContent = titles[page]?.[1] || '';
   document.getElementById('topbar-actions').style.display = page === 'bots' ? '' : 'none';
   if(page === 'activity') renderActivityLog();
 }
@@ -987,6 +1102,7 @@ function showPage(page) {
    BOT RENDERING
    ============================ */
 function getInitials(name) {
+  if (!name) return '??';
   return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
 }
 function maskToken(token) {
@@ -995,6 +1111,7 @@ function maskToken(token) {
   return token.slice(0, 8) + '•'.repeat(10) + token.slice(-4);
 }
 function formatUptime(s) {
+  if (!s || s < 0) return '0วิ';
   if (s < 60) return s + 'วิ';
   if (s < 3600) return Math.floor(s/60) + 'น.';
   const h = Math.floor(s/3600), m = Math.floor((s%3600)/60);
@@ -1020,6 +1137,7 @@ function renderBots() {
     const initials = getInitials(bot.name);
     const dotClass = { running: 'online', stopped: 'offline', connecting: 'connecting' }[statusClass];
     const uptime = bot.uptime > 0 ? formatUptime(bot.uptime) : null;
+    const commands = bot.commands || [];
 
     return `
     <div class="bot-card ${statusClass}" id="bot-card-${bot.id}">
@@ -1057,6 +1175,11 @@ function renderBots() {
         </div>
       </div>
 
+      ${commands.length ? `
+      <div class="bot-commands">
+        ${commands.map(cmd => `<span class="cmd-btn" onclick="sendCommand('${bot.id}','${cmd}')">/${cmd}</span>`).join('')}
+      </div>` : `<div class="bot-commands"><span style="font-size:11px;color:var(--text3);">ไม่มีคำสั่งที่กำหนด</span></div>`}
+
       <div class="bot-actions">
         ${statusClass === 'running'
           ? `<button class="btn btn-danger btn-sm" onclick="stopBot('${bot.id}')"><i class="ti ti-player-stop"></i> หยุด</button>`
@@ -1079,12 +1202,14 @@ function renderBots() {
 }
 
 function stringToColor(str) {
+  if (!str) return '#7c6ff7';
   let hash = 0;
   for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  const colors = ['#7c6ff7','#5b8af0','#3dd68c','#f5a623','#f25656','#c471ed','#44b3f8'];
+  const colors = ['#7c6ff7','#5b8af0','#3dd68c','#f5a623','#f25656','#c471ed','#44b3f8','#ff6b6b','#4ecdc4','#45b7d1'];
   return colors[Math.abs(hash) % colors.length];
 }
 function escHtml(s) {
+  if (!s) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
@@ -1103,30 +1228,54 @@ function updateStats() {
 /* ============================
    BOT ACTIONS
    ============================ */
-function startBot(id) {
+async function startBot(id) {
   const bot = bots.find(b => b.id === id);
   if (!bot) return;
   if (!bot.token || !bot.channelId || !bot.guildId) {
     showToast('กรุณาตั้งค่า Token, Guild ID และ Channel ID ก่อน', 'error');
     return;
   }
+
   bot.status = 'connecting';
   renderBots();
-  addLog(bot, 'info', `กำลังเชื่อมต่อ... (${bot.guildId} / ${bot.channelId})`);
+  addLog(bot, 'info', `🔄 กำลังเชื่อมต่อ... (${bot.guildId} / ${bot.channelId})`);
 
-  // Simulate connection
-  setTimeout(() => {
-    // Note: ในระบบจริงต้องใช้ backend/proxy เพราะ browser block WebSocket ไป Discord
-    bot.status = 'running';
-    bot.startTime = Date.now();
-    bot.uptime = 0;
-    startUptimeCounter(id);
-    addLog(bot, 'ok', `เชื่อมต่อสำเร็จ! เข้าช่องเสียง ${bot.channelId}`);
-    addActivity('join', `${bot.name} เข้าช่องเสียง`, bot.channelId);
-    showToast(`${bot.name} เชื่อมต่อสำเร็จ! ✅`, 'success');
-    renderBots();
-    saveToStorage();
-  }, 2200 + Math.random() * 800);
+  try {
+    // ส่งคำขอไปยัง backend ผ่าน REST API
+    const response = await fetch(`${API_BASE}/api/voice/start`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: 'web-user',
+        token: bot.token,
+        serverId: bot.guildId,
+        voiceChannelId: bot.channelId,
+        selfDeaf: bot.selfDeaf || 'true',
+        selfMute: bot.selfMute || 'true'
+      })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      bot.status = 'running';
+      bot.startTime = Date.now();
+      bot.uptime = 0;
+      startUptimeCounter(id);
+      addLog(bot, 'ok', `✅ เชื่อมต่อสำเร็จ! เข้าช่องเสียง ${bot.channelId}`);
+      addActivity('join', `${bot.name} เข้าช่องเสียง`, bot.channelId);
+      showToast(`${bot.name} เชื่อมต่อสำเร็จ! ✅`, 'success');
+    } else {
+      const err = await response.text();
+      throw new Error(err || 'Connection failed');
+    }
+  } catch (err) {
+    bot.status = 'stopped';
+    addLog(bot, 'err', `❌ เชื่อมต่อล้มเหลว: ${err.message}`);
+    showToast(`เชื่อมต่อ ${bot.name} ล้มเหลว: ${err.message}`, 'error');
+  }
+
+  renderBots();
+  saveToStorage();
 }
 
 function stopBot(id) {
@@ -1136,9 +1285,17 @@ function stopBot(id) {
   delete uptimeIntervals[id];
   bot.status = 'stopped';
   bot.uptime = 0;
-  addLog(bot, 'warn', 'ออกจากช่องเสียงแล้ว');
+  addLog(bot, 'warn', '⏹ ออกจากช่องเสียงแล้ว');
   addActivity('leave', `${bot.name} ออกจากช่องเสียง`, bot.channelId || '-');
   showToast(`${bot.name} หยุดทำงานแล้ว`, 'info');
+
+  // ส่งคำขอหยุดไปยัง backend
+  fetch(`${API_BASE}/api/voice/stop`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId: 'web-user', token: bot.token })
+  }).catch(() => {});
+
   renderBots();
   saveToStorage();
 }
@@ -1146,7 +1303,10 @@ function stopBot(id) {
 function startUptimeCounter(id) {
   uptimeIntervals[id] = setInterval(() => {
     const bot = bots.find(b => b.id === id);
-    if (!bot || bot.status !== 'running') { clearInterval(uptimeIntervals[id]); return; }
+    if (!bot || bot.status !== 'running') {
+      clearInterval(uptimeIntervals[id]);
+      return;
+    }
     bot.uptime = Math.floor((Date.now() - bot.startTime) / 1000);
     const el = document.querySelector(`#bot-card-${id} .bot-uptime`);
     if (el) el.textContent = '⏱ ' + formatUptime(bot.uptime);
@@ -1163,6 +1323,48 @@ function stopAllBots() {
   const running = bots.filter(b => b.status === 'running');
   if (running.length === 0) { showToast('ไม่มีบอทที่กำลังทำงาน', 'info'); return; }
   running.forEach(b => stopBot(b.id));
+}
+
+async function syncWithBot() {
+  showToast('🔄 กำลังซิงค์สถานะ...', 'info');
+  try {
+    const response = await fetch(`${API_BASE}/api/voice/status`);
+    if (response.ok) {
+      const data = await response.json();
+      // อัปเดตสถานะจากข้อมูลที่ได้รับ
+      if (data.bots) {
+        data.bots.forEach(remoteBot => {
+          const localBot = bots.find(b => b.token === remoteBot.token);
+          if (localBot) {
+            localBot.status = remoteBot.status || localBot.status;
+            if (remoteBot.uptime) localBot.uptime = remoteBot.uptime;
+          }
+        });
+        renderBots();
+        showToast('✅ ซิงค์สถานะสำเร็จ', 'success');
+      }
+    }
+  } catch (e) {
+    showToast('⚠️ ไม่สามารถซิงค์กับเซิร์ฟเวอร์ได้', 'error');
+  }
+}
+
+function sendCommand(botId, cmd) {
+  const bot = bots.find(b => b.id === botId);
+  if (!bot) return;
+  showToast(`📤 ส่งคำสั่ง /${cmd} ไปยัง ${bot.name}`, 'info');
+  addLog(bot, 'info', `📤 ส่งคำสั่ง /${cmd}`);
+
+  // ส่งคำสั่งไปยัง backend
+  fetch(`${API_BASE}/api/voice/command`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      userId: 'web-user',
+      token: bot.token,
+      command: cmd
+    })
+  }).catch(() => {});
 }
 
 function addLog(bot, type, msg) {
@@ -1198,7 +1400,7 @@ function renderActivityLog() {
     body.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text3);font-size:13px;"><i class="ti ti-file-description" style="font-size:32px;display:block;margin-bottom:10px;opacity:0.3"></i>ยังไม่มีประวัติกิจกรรม</div>`;
     return;
   }
-  body.innerHTML = activityLog.map(l => `
+  body.innerHTML = activityLog.slice(0, 50).map(l => `
     <div class="log-row">
       <div style="color:var(--text3);font-size:12px">${l.time}</div>
       <div><span class="log-type-badge ${l.type}">${l.type}</span></div>
@@ -1281,13 +1483,38 @@ function saveBot() {
   if (!guildId) { showToast('กรุณาใส่ Server ID', 'error'); switchTab('bot'); document.getElementById('bot-guild-input').focus(); return; }
   if (!channelId) { showToast('กรุณาใส่ Voice Channel ID', 'error'); switchTab('channel'); document.getElementById('bot-channel-input').focus(); return; }
 
+  // ตรวจสอบโทเค่นซ้ำ
+  if (!editingId && bots.some(b => b.token === token)) {
+    showToast('โทเค่นนี้มีอยู่ในระบบแล้ว', 'error');
+    return;
+  }
+
   if (editingId) {
     const bot = bots.find(b => b.id === editingId);
-    if (bot) { Object.assign(bot, { name, token, guildId, note, channelId, selfMute, selfDeaf }); }
+    if (bot) {
+      // ถ้า token เปลี่ยน ให้หยุดบอทเก่า
+      if (bot.token !== token && bot.status === 'running') {
+        stopBot(bot.id);
+      }
+      Object.assign(bot, { name, token, guildId, note, channelId, selfMute, selfDeaf });
+    }
     showToast(`แก้ไข ${name} แล้ว`, 'success');
     addActivity('info', `แก้ไขข้อมูลบอท ${name}`);
   } else {
-    const bot = { id: genId(), name, token, guildId, note, channelId, selfMute, selfDeaf, status: 'stopped', uptime: 0, logs: [] };
+    const bot = {
+      id: genId(),
+      name,
+      token,
+      guildId,
+      note,
+      channelId,
+      selfMute,
+      selfDeaf,
+      status: 'stopped',
+      uptime: 0,
+      logs: [],
+      commands: ['ping', 'status', 'join', 'leave']
+    };
     bots.push(bot);
     showToast(`เพิ่ม ${name} แล้ว! 🎉`, 'success');
     addActivity('info', `เพิ่มบอทใหม่ ${name}`);
@@ -1342,7 +1569,7 @@ function showToast(msg, type = 'info') {
   el.className = `toast ${type}`;
   el.innerHTML = `<i class="ti ${icons[type] || 'ti-info-circle'}"></i><span>${escHtml(msg)}</span>`;
   tc.appendChild(el);
-  setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(40px)'; el.style.transition = 'all 0.3s'; setTimeout(() => el.remove(), 300); }, 3500);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(40px)'; el.style.transition = 'all 0.3s'; setTimeout(() => el.remove(), 300); }, 4000);
 }
 
 /* ============================
@@ -1360,10 +1587,22 @@ function toggleTokenVisible() {
    ============================ */
 function toggleLocalStorage(el) {
   el.classList.toggle('on');
+  if (el.classList.contains('on')) {
+    saveToStorage();
+    showToast('✅ เปิดการบันทึกข้อมูล', 'success');
+  } else {
+    localStorage.removeItem('voicebot_hub_bots');
+    localStorage.removeItem('voicebot_hub_log');
+    showToast('⚠️ ปิดการบันทึกข้อมูล (ข้อมูลถูกลบแล้ว)', 'info');
+  }
 }
 
 function exportData() {
-  const data = JSON.stringify({ bots: bots.map(b => ({ ...b, status: 'stopped', uptime: 0, logs: [] })), exported: new Date().toISOString() }, null, 2);
+  const data = JSON.stringify({
+    bots: bots.map(b => ({ ...b, status: 'stopped', uptime: 0, logs: [] })),
+    exported: new Date().toISOString(),
+    version: '2.0'
+  }, null, 2);
   const a = document.createElement('a');
   a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(data);
   a.download = 'voicebot-hub-export.json';
@@ -1383,15 +1622,34 @@ function importData(e) {
         saveToStorage();
         renderBots();
         showToast(`Import สำเร็จ! พบ ${bots.length} บอท`, 'success');
+        addActivity('info', `Import ข้อมูล ${bots.length} บอท`);
       } else throw new Error();
-    } catch { showToast('ไฟล์ไม่ถูกต้อง', 'error'); }
+    } catch {
+      showToast('ไฟล์ไม่ถูกต้อง', 'error');
+    }
   };
   reader.readAsText(file);
   e.target.value = '';
 }
 
-function openDocs() {
-  alert('📖 คู่มือการใช้งาน\n\n1. เพิ่มบอทโดยคลิก "เพิ่มบอท"\n2. กรอก Bot Token จาก Discord Developer Portal\n3. ใส่ Server ID และ Voice Channel ID\n4. กด "เริ่ม" เพื่อให้บอทเข้าช่องเสียง\n\n⚠️ หมายเหตุ: เว็บนี้จำลองการทำงาน เพราะ browser ไม่สามารถเชื่อมต่อ Discord Gateway โดยตรงได้ ต้องใช้ Backend/Proxy server\n\nสำหรับระบบจริง ให้ Deploy backend บน Railway/Heroku แล้วเรียก API จากเว็บนี้');
+/* ============================
+   STATUS INDICATOR
+   ============================ */
+function updateConnectionStatus(state, msg) {
+  const dot = document.getElementById('status-dot');
+  const text = document.getElementById('status-text');
+  dot.className = 'dot';
+  if (state === 'online') {
+    dot.classList.add('online');
+    text.textContent = msg || 'เชื่อมต่อแล้ว';
+  } else if (state === 'connecting') {
+    dot.classList.add('connecting');
+    text.textContent = msg || 'กำลังเชื่อมต่อ...';
+  } else {
+    dot.classList.add('offline');
+    text.textContent = msg || 'ไม่เชื่อมต่อ';
+  }
+  document.getElementById('server-status').textContent = text.textContent;
 }
 
 /* ============================
@@ -1400,6 +1658,8 @@ function openDocs() {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeModal(); closeConfirm(); }
 });
+
+// Close modal on backdrop click
 document.getElementById('bot-modal').addEventListener('click', e => {
   if (e.target === document.getElementById('bot-modal')) closeModal();
 });
@@ -1413,6 +1673,24 @@ document.getElementById('confirm-dialog').addEventListener('click', e => {
 loadFromStorage();
 document.getElementById('nav-log-count').textContent = activityLog.length;
 renderBots();
+updateConnectionStatus('online', 'พร้อมใช้งาน');
+
+// ตรวจสอบสถานะเซิร์ฟเวอร์
+setInterval(async () => {
+  try {
+    const response = await fetch(`${API_BASE}/api/health`);
+    if (response.ok) {
+      updateConnectionStatus('online', 'เชื่อมต่อแล้ว');
+    } else {
+      updateConnectionStatus('offline', 'เซิร์ฟเวอร์ไม่ตอบสนอง');
+    }
+  } catch {
+    updateConnectionStatus('offline', 'ไม่สามารถเชื่อมต่อ');
+  }
+}, 30000);
+
+console.log('🎙️ VoiceBot Hub v2.0 ทำงานแล้ว');
+console.log(`📊 มีบอท ${bots.length} ตัว, กิจกรรม ${activityLog.length} รายการ`);
 </script>
 </body>
 </html>
