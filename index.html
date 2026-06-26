@@ -1,2177 +1,990 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎙️ VoiceBot Manager Pro</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ทำป้าย ROV ออนไลน์ ฟรี! (Template 2.1) | ป้ายเกม.com</title>
+<meta name="description" content="เทมเพลตใหม่ของระบบทำป้าย ROV ออนไลน์ฟรี Template 2 ดีไซน์สวย ทันสมัย ใช้งานง่าย สร้างป้ายขายไอดีสุดเท่ได้เองบนมือถือ ป้ายเกม.com">
+<meta name="keywords" content="ทำป้าย rov, ป้าย rov, ป้ายขายไอดี rov, สร้างป้าย rov, ป้ายเกม rov, ป้ายเกม.com,วิธีทำป้ายrov">
+<link rel="canonical" href="https://ป้ายเกม.com/rov-id">
+
+
+<meta property="og:title" content="ทำป้าย ROV ออนไลน์ง่าย ๆ แค่ไม่กี่คลิก! สร้างป้ายขายไอดี ROV ได้ฟรี">
+<meta property="og:description" content="เว็บไซต์ทำป้าย ROV ออนไลน์ ฟรี!">
+<meta property="og:image" content="/images/pre_2.jpg">
+<meta property="og:url" content="https://xn--12c5ctac3f2duc.com/rov-id">
+<meta property="og:type" content="website">
+
+<!-- สำหรับ Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="เว็บไซต์ทำป้าย ROV ออนไลน์ ฟรี!">
+<meta name="twitter:description" content="ทำป้าย ROV ออนไลน์ง่าย ๆ แค่ไม่กี่คลิก! สร้างป้ายขายไอดี ROV ได้ฟรี">
+<meta name="twitter:image" content="/images/pre_2.jpg">
+
+
+  <link rel="icon" type="image/x-icon" href="/icons/icon_pai.png" />
+
+<!-- Fonts + Cropper.js -->
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700;900&family=Prompt:wght@400;700;900&family=Sarabun:wght@400;700&family=Bai+Jamjuree:wght@400;700&family=Chakra+Petch:wght@400;700&family=Anuphan:wght@400;700&family=Itim:wght@400;700;900&display=swap" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css"/>
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6FTP0VQGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6FTP0VQGE');
+</script>
+
+<link rel="stylesheet" type="text/css" href="css/app.css?v=1">
+
 <style>
-  /* ===== ANTI-INSPECT ===== */
-  * {
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    user-select: none !important;
-    -webkit-touch-callout: none !important;
-  }
-  ::selection { background: transparent !important; }
-  ::-moz-selection { background: transparent !important; }
-
-  /* ===== ROOT ===== */
-  :root {
-    --bg-primary: #0a0b14;
-    --bg-secondary: #11131f;
-    --bg-card: #16182b;
-    --bg-card-hover: #1c1f38;
-    --bg-input: #0e1020;
-    --bg-sidebar: #0c0d18;
-    --border-color: rgba(255,255,255,0.06);
-    --border-light: rgba(255,255,255,0.1);
-    --text-primary: #f0f1f9;
-    --text-secondary: #a8abc4;
-    --text-muted: #5d6180;
-    --purple: #7c6ff7;
-    --purple-light: #a89cf7;
-    --purple-dark: #5b52d8;
-    --purple-glow: rgba(124,111,247,0.15);
-    --green: #3dd68c;
-    --green-glow: rgba(61,214,140,0.15);
-    --red: #f25656;
-    --red-glow: rgba(242,86,86,0.15);
-    --amber: #f5a623;
-    --amber-glow: rgba(245,166,35,0.15);
-    --radius: 16px;
-    --radius-sm: 10px;
-    --radius-xs: 6px;
-    --shadow: 0 8px 32px rgba(0,0,0,0.5);
-    --shadow-glow: 0 0 60px rgba(124,111,247,0.05);
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* ===== GLOBAL ===== */
-  * { margin: 0; padding: 0; box-sizing: border-box; }
   
-  body {
-    font-family: 'Inter', -apple-system, system-ui, sans-serif;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    min-height: 100vh;
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background-image: 
-      radial-gradient(ellipse at 20% 50%, rgba(124,111,247,0.05) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 50%, rgba(61,214,140,0.03) 0%, transparent 60%);
-  }
+  .skin-item .tick {
+  transition: none !important;
+  will-change: transform, opacity;
+}
 
-  /* ===== ANTI-DEBUG OVERLAY ===== */
-  #anti-debug-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.95);
-    z-index: 99999;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 20px;
-    text-align: center;
-    padding: 20px;
-    backdrop-filter: blur(20px);
-  }
-  #anti-debug-overlay.show { display: flex; }
-  #anti-debug-overlay .icon {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: var(--red-glow);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    color: var(--red);
-    animation: pulse 2s infinite;
-  }
-  #anti-debug-overlay h2 {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--red);
-    margin-top: 8px;
-  }
-  #anti-debug-overlay p {
-    color: var(--text-secondary);
-    max-width: 400px;
-    line-height: 1.8;
-    font-size: 14px;
-  }
-  #anti-debug-overlay .btn-reload {
-    background: var(--purple);
-    color: #fff;
-    border: none;
-    padding: 14px 40px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    transition: var(--transition);
-    font-family: 'Inter', sans-serif;
-  }
-  #anti-debug-overlay .btn-reload:hover {
-    background: var(--purple-dark);
-    transform: scale(1.02);
-  }
+/* ✅ พื้นหลังมืด */
+.premium-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.premium-overlay.hidden { display: none; }
 
-  /* ===== APP LAYOUT ===== */
-  .app {
-    display: flex;
-    min-height: 100vh;
-    position: relative;
-    z-index: 1;
-  }
+.premium-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px 20px 30px;
+  width: 90%;
+  max-width: 350px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  animation: fadeIn 0.25s ease-out;
+}
 
-  /* ===== SIDEBAR ===== */
-  .sidebar {
-    width: 260px;
-    min-height: 100vh;
-    background: var(--bg-sidebar);
-    border-right: 1px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    position: fixed;
-    top: 0; left: 0; bottom: 0;
-    z-index: 10;
-    backdrop-filter: blur(20px);
-  }
-  
-  .sidebar-logo {
-    padding: 28px 24px 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border-bottom: 1px solid var(--border-color);
-  }
-  .logo-icon {
-    width: 44px;
-    height: 44px;
-    background: linear-gradient(135deg, var(--purple), var(--purple-dark));
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
-    box-shadow: 0 4px 20px rgba(124,111,247,0.3);
-  }
-  .logo-text {
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--text-primary);
-    letter-spacing: -0.5px;
-  }
-  .logo-text span {
-    color: var(--purple-light);
-  }
-  .logo-sub {
-    font-size: 10px;
-    color: var(--text-muted);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
+.close-btn {
+  position: absolute;
+  right: 10px; top: 6px;
+  border: none; background: transparent;
+  font-size: 24px; color: #444; cursor: pointer;
+}
 
-  .sidebar-nav {
-    padding: 16px 12px;
-    flex: 1;
-    overflow-y: auto;
-  }
-  .nav-label {
-    font-size: 10px;
-    color: var(--text-muted);
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-    padding: 12px 12px 8px;
-    font-weight: 700;
-  }
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 14px;
-    border-radius: var(--radius-sm);
-    color: var(--text-secondary);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition);
-    margin-bottom: 2px;
-    position: relative;
-  }
-  .nav-item:hover {
-    background: rgba(255,255,255,0.04);
-    color: var(--text-primary);
-  }
-  .nav-item.active {
-    background: var(--purple-glow);
-    color: var(--purple-light);
-  }
-  .nav-item.active::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 3px;
-    height: 24px;
-    background: var(--purple);
-    border-radius: 0 3px 3px 0;
-  }
-  .nav-item i {
-    font-size: 18px;
-    width: 24px;
-    text-align: center;
-  }
-  .nav-badge {
-    margin-left: auto;
-    background: var(--purple-glow);
-    color: var(--purple-light);
-    font-size: 11px;
-    padding: 2px 10px;
-    border-radius: 20px;
-    font-weight: 600;
-  }
-  .nav-badge.green {
-    background: var(--green-glow);
-    color: var(--green);
-  }
+.download-btn {
+  background: linear-gradient(45deg,#0078FF,#00B8FF);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.download-btn:hover { opacity: 0.9; }
 
-  .sidebar-footer {
-    padding: 20px 24px;
-    border-top: 1px solid var(--border-color);
-    font-size: 12px;
-    color: var(--text-muted);
-    text-align: center;
-    line-height: 1.6;
-  }
-  .sidebar-footer .status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--green);
-    font-weight: 500;
-  }
-  .sidebar-footer .status .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--green);
-    animation: pulse 2s infinite;
-  }
+.spinner {
+  width: 40px; height: 40px;
+  border: 4px solid #eee;
+  border-top: 4px solid #0078ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: auto;
+}
 
-  /* ===== MAIN ===== */
-  .main {
-    margin-left: 260px;
-    flex: 1;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeIn { from{opacity:0;transform:scale(.9);} to{opacity:1;transform:scale(1);} }
 
-  /* ===== TOPBAR ===== */
-  .topbar {
-    height: 72px;
-    background: rgba(17, 19, 31, 0.8);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    padding: 0 32px;
-    gap: 16px;
-    position: sticky;
-    top: 0;
-    z-index: 9;
-  }
-  .topbar-left {
-    flex: 1;
-    min-width: 0;
-  }
-  .topbar-title {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-  }
-  .topbar-sub {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-top: 1px;
-  }
-  .topbar-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  
-  /* ===== BUTTONS ===== */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: var(--transition);
-    white-space: nowrap;
-    font-family: 'Inter', sans-serif;
-  }
-  .btn i { font-size: 17px; }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--purple), var(--purple-dark));
-    color: #fff;
-    box-shadow: 0 4px 20px rgba(124,111,247,0.3);
-  }
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(124,111,247,0.4);
-  }
-  .btn-outline {
-    background: transparent;
-    color: var(--text-secondary);
-    border: 1px solid var(--border-light);
-  }
-  .btn-outline:hover {
-    background: rgba(255,255,255,0.05);
-    color: var(--text-primary);
-    border-color: rgba(255,255,255,0.2);
-  }
-  .btn-success {
-    background: var(--green-glow);
-    color: var(--green);
-    border: 1px solid rgba(61,214,140,0.25);
-  }
-  .btn-success:hover {
-    background: rgba(61,214,140,0.2);
-    transform: translateY(-2px);
-  }
-  .btn-danger {
-    background: var(--red-glow);
-    color: var(--red);
-    border: 1px solid rgba(242,86,86,0.25);
-  }
-  .btn-danger:hover {
-    background: rgba(242,86,86,0.2);
-    transform: translateY(-2px);
-  }
-  .btn-sm {
-    padding: 6px 14px;
-    font-size: 12px;
-    border-radius: var(--radius-xs);
-  }
-  .btn-sm i { font-size: 14px; }
 
-  .connection-status {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 16px;
-    background: var(--bg-input);
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border-color);
-    font-size: 12px;
-    color: var(--text-secondary);
-    font-weight: 500;
-  }
-  .connection-status .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-  }
-  .connection-status .dot.online {
-    background: var(--green);
-    box-shadow: 0 0 20px rgba(61,214,140,0.3);
-  }
-  .connection-status .dot.offline {
-    background: var(--text-muted);
-  }
 
-  /* ===== CONTENT ===== */
-  .content {
-    padding: 28px 32px 32px;
-    overflow-y: auto;
-    flex: 1;
-    height: calc(100vh - 72px);
-  }
+.dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 280px;
+  font-size: 15px;
+  font-weight: 600;
+}
 
-  /* ===== STATS ===== */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 28px;
-  }
-  .stat-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    padding: 20px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    transition: var(--transition);
-  }
-  .stat-card:hover {
-    border-color: var(--border-light);
-    transform: translateY(-2px);
-  }
-  .stat-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
-  }
-  .stat-icon.purple {
-    background: var(--purple-glow);
-    color: var(--purple-light);
-  }
-  .stat-icon.green {
-    background: var(--green-glow);
-    color: var(--green);
-  }
-  .stat-icon.amber {
-    background: var(--amber-glow);
-    color: var(--amber);
-  }
-  .stat-icon.red {
-    background: var(--red-glow);
-    color: var(--red);
-  }
-  .stat-info { flex: 1; }
-  .stat-label {
-    font-size: 12px;
-    color: var(--text-muted);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .stat-value {
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-  }
-  .stat-value.purple { color: var(--purple-light); }
-  .stat-value.green { color: var(--green); }
-  .stat-value.amber { color: var(--amber); }
-  .stat-value.red { color: var(--red); }
+.dropdown-btn {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: white;
+  color: black;
+  border: 1px solid #444;
+  cursor: pointer;
+  text-align: left;
+  transition: 0.2s;
+  font-size: 16px;
+}
 
-  /* ===== SECTION ===== */
-  .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .section-title {
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-  }
-  .section-sub {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-top: 2px;
-  }
+/*.dropdown-btn:hover {
+  background: linear-gradient(90deg, #222, #333);
+}*/
 
-  /* ===== BOT CARDS ===== */
-  .bots-grid {
-    display: grid;
-    gap: 16px;
-  }
-  .bot-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    padding: 20px 24px;
-    transition: var(--transition);
-    position: relative;
-    overflow: hidden;
-  }
-  .bot-card::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    border-radius: 0 4px 4px 0;
-    background: var(--border-color);
-    transition: var(--transition);
-  }
-  .bot-card.running::before { background: var(--green); box-shadow: 0 0 20px rgba(61,214,140,0.2); }
-  .bot-card.stopped::before { background: var(--text-muted); }
-  .bot-card.connecting::before { background: var(--amber); box-shadow: 0 0 20px rgba(245,166,35,0.2); }
-  .bot-card:hover {
-    border-color: var(--border-light);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-glow);
-  }
+.dropdown-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  background: #1b1b1b;
+  border: 1px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  z-index: 20;
+  color: white;
+  max-height: 220px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
 
-  .bot-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 16px;
-  }
-  .bot-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: 700;
-    flex-shrink: 0;
-    position: relative;
-  }
-  .status-dot {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    border: 3px solid var(--bg-card);
-  }
-  .status-dot.online {
-    background: var(--green);
-    box-shadow: 0 0 16px rgba(61,214,140,0.3);
-  }
-  .status-dot.connecting {
-    background: var(--amber);
-    animation: pulse 1.5s infinite;
-  }
-  .status-dot.offline {
-    background: var(--text-muted);
-  }
+.font-item {
+  padding: 8px 12px;
+  color: white;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: background 0.2s;
+}
 
-  .bot-info {
-    flex: 1;
-    min-width: 0;
-  }
-  .bot-name {
-    font-size: 16px;
-    font-weight: 600;
-  }
-  .bot-id {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 1px;
-  }
-  .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 14px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    flex-shrink: 0;
-  }
-  .status-badge.running {
-    background: var(--green-glow);
-    color: var(--green);
-  }
-  .status-badge.stopped {
-    background: rgba(255,255,255,0.04);
-    color: var(--text-muted);
-  }
-  .status-badge.connecting {
-    background: var(--amber-glow);
-    color: var(--amber);
-  }
-  .status-badge .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-  }
-  .status-badge .dot.pulse {
-    animation: pulse 1.5s infinite;
-  }
+.font-item:hover {
+  background: #5a0be0;
+  color: #ffd700;
+}
 
-  .bot-fields {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  .bot-field {
-    background: var(--bg-input);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-xs);
-    padding: 8px 14px;
-  }
-  .bot-field-label {
-    font-size: 10px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    font-weight: 600;
-    margin-bottom: 2px;
-  }
-  .bot-field-value {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .bot-field-value.token {
-    font-family: 'Courier New', monospace;
-    color: var(--purple-light);
-    font-size: 12px;
-  }
+.hidden { display: none; }
 
-  .bot-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
+@media (max-width: 768px) {
+  .dropdown-btn {
+    padding: 0 !important;
   }
-  .bot-uptime {
-    font-size: 12px;
-    color: var(--text-muted);
-    font-weight: 500;
-    margin-left: auto;
-  }
+}
 
-  .section-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  gap: 8px;
+}
 
-  /* ===== MODAL ===== */
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(12px);
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-  .modal-backdrop.open {
-    opacity: 1;
-    pointer-events: all;
-  }
-  .modal {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius);
-    width: 100%;
-    max-width: 560px;
-    box-shadow: var(--shadow);
-    transform: translateY(20px) scale(0.95);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-  .modal-backdrop.open .modal {
-    transform: translateY(0) scale(1);
-  }
-  .modal-header {
-    padding: 24px 28px 16px;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .modal-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: var(--purple-glow);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--purple-light);
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-  .modal-title {
-    font-size: 18px;
-    font-weight: 700;
-  }
-  .modal-sub {
-    font-size: 13px;
-    color: var(--text-secondary);
-  }
-  .modal-close {
-    margin-left: auto;
-    width: 36px;
-    height: 36px;
-    border-radius: var(--radius-xs);
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    font-size: 20px;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .modal-close:hover {
-    background: rgba(255,255,255,0.06);
-    color: var(--text-primary);
-  }
-  .modal-body { padding: 24px 28px; }
-  .modal-footer {
-    padding: 16px 28px 24px;
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-  }
+.switch input {
+  display: none;
+}
 
-  /* ===== FORM ===== */
-  .form-group { margin-bottom: 18px; }
-  .form-label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-secondary);
-    margin-bottom: 6px;
-  }
-  .form-label i { font-size: 15px; }
-  .form-hint {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 4px;
-  }
-  .form-required {
-    color: var(--red);
-    font-size: 11px;
-  }
-  input, select {
-    width: 100%;
-    background: var(--bg-input);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-xs);
-    padding: 11px 16px;
-    color: var(--text-primary);
-    font-size: 14px;
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: var(--transition);
-  }
-  input:focus, select:focus {
-    border-color: var(--purple);
-    box-shadow: 0 0 0 4px var(--purple-glow);
-  }
-  input::placeholder {
-    color: var(--text-muted);
-  }
-  select option {
-    background: var(--bg-secondary);
-  }
+.slider {
+  width: 42px;
+  height: 22px;
+  background: #ccc;
+  border-radius: 22px;
+  position: relative;
+  transition: 0.3s;
+}
 
-  .tabs {
-    display: flex;
-    gap: 4px;
-    background: var(--bg-input);
-    border-radius: var(--radius-xs);
-    padding: 4px;
-    margin-bottom: 20px;
-  }
-  .tab {
-    flex: 1;
-    padding: 8px;
-    text-align: center;
-    border-radius: var(--radius-xs);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    color: var(--text-secondary);
-    transition: var(--transition);
-  }
-  .tab.active {
-    background: var(--purple);
-    color: #fff;
-    box-shadow: 0 4px 16px rgba(124,111,247,0.3);
-  }
-  .tab:hover:not(.active) {
-    color: var(--text-primary);
-  }
+.slider::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: 0.3s;
+}
 
-  /* ===== EMPTY STATE ===== */
-  .empty-state {
-    text-align: center;
-    padding: 60px 24px;
-    color: var(--text-muted);
-  }
-  .empty-state .icon {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: var(--purple-glow);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    color: var(--purple-light);
-    margin: 0 auto 16px;
-  }
-  .empty-state h3 {
-    font-size: 18px;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-  }
-  .empty-state p {
-    font-size: 14px;
-    line-height: 1.8;
-    max-width: 400px;
-    margin: 0 auto;
-  }
+input:checked + .slider {
+  background: #4caf50;
+}
 
-  /* ===== TOAST ===== */
-  .toast-container {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    z-index: 200;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .toast {
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-sm);
-    padding: 14px 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 13px;
-    font-weight: 500;
-    min-width: 300px;
-    max-width: 420px;
-    box-shadow: var(--shadow);
-    animation: slideIn 0.3s ease;
-    backdrop-filter: blur(12px);
-  }
-  .toast.success { border-left: 4px solid var(--green); }
-  .toast.error { border-left: 4px solid var(--red); }
-  .toast.info { border-left: 4px solid var(--purple); }
-  .toast i { font-size: 20px; }
-  .toast.success i { color: var(--green); }
-  .toast.error i { color: var(--red); }
-  .toast.info i { color: var(--purple-light); }
+input:checked + .slider::before {
+  transform: translateX(20px);
+}
 
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateX(40px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-
-  /* ===== CONFIRM DIALOG ===== */
-  .confirm-dialog {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(12px);
-    z-index: 300;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-  .confirm-dialog.open {
-    opacity: 1;
-    pointer-events: all;
-  }
-  .confirm-box {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius);
-    padding: 32px;
-    max-width: 400px;
-    width: 100%;
-    transform: scale(0.95);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .confirm-dialog.open .confirm-box {
-    transform: scale(1);
-  }
-  .confirm-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: var(--red-glow);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 32px;
-    color: var(--red);
-    margin: 0 auto 16px;
-  }
-  .confirm-title {
-    font-size: 18px;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 8px;
-  }
-  .confirm-msg {
-    font-size: 14px;
-    color: var(--text-secondary);
-    text-align: center;
-    line-height: 1.6;
-    margin-bottom: 24px;
-  }
-  .confirm-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-  }
-
-  /* ===== ACTIVITY LOG ===== */
-  .log-page { display: none; }
-  .log-page.active { display: block; }
-  .settings-page { display: none; }
-  .settings-page.active { display: block; }
-
-  .log-table {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-  .log-row {
-    display: grid;
-    grid-template-columns: 140px 100px 1fr;
-    padding: 12px 20px;
-    font-size: 13px;
-    border-bottom: 1px solid var(--border-color);
-    gap: 16px;
-    align-items: center;
-  }
-  .log-row:last-child { border-bottom: none; }
-  .log-row.header {
-    background: var(--bg-input);
-    font-size: 11px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    font-weight: 600;
-  }
-  .log-type-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-  }
-  .log-type-badge.join {
-    background: var(--green-glow);
-    color: var(--green);
-  }
-  .log-type-badge.leave {
-    background: var(--red-glow);
-    color: var(--red);
-  }
-  .log-type-badge.info {
-    background: var(--purple-glow);
-    color: var(--purple-light);
-  }
-
-  /* ===== SETTINGS ===== */
-  .settings-section {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    padding: 24px;
-    margin-bottom: 16px;
-  }
-  .settings-section-title {
-    font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .settings-section-title i {
-    color: var(--purple-light);
-    font-size: 20px;
-  }
-  .toggle-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border-color);
-  }
-  .toggle-row:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-  .toggle-label {
-    font-size: 14px;
-    font-weight: 500;
-  }
-  .toggle-sub {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 2px;
-  }
-  .toggle {
-    width: 44px;
-    height: 24px;
-    background: var(--border-color);
-    border-radius: 12px;
-    position: relative;
-    cursor: pointer;
-    transition: var(--transition);
-    flex-shrink: 0;
-  }
-  .toggle.on {
-    background: var(--purple);
-    box-shadow: 0 0 20px rgba(124,111,247,0.3);
-  }
-  .toggle::after {
-    content: '';
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #fff;
-    top: 3px;
-    left: 3px;
-    transition: var(--transition);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  .toggle.on::after {
-    transform: translateX(20px);
-  }
-
-  /* ===== RESPONSIVE ===== */
-  @media (max-width: 1024px) {
-    .bot-fields { grid-template-columns: repeat(2, 1fr); }
-  }
-  
-  @media (max-width: 768px) {
-    .sidebar { width: 200px; }
-    .main { margin-left: 200px; }
-    .stats-grid { grid-template-columns: 1fr 1fr; }
-    .topbar { padding: 0 16px; }
-    .content { padding: 16px; }
-    .bot-fields { grid-template-columns: 1fr; }
-  }
-  
-  @media (max-width: 600px) {
-    .sidebar { display: none; }
-    .main { margin-left: 0; }
-    .stats-grid { grid-template-columns: 1fr 1fr; }
-    .topbar-title { font-size: 16px; }
-    .topbar-sub { font-size: 12px; }
-    .log-row { grid-template-columns: 1fr; gap: 4px; }
-    .log-row.header { display: none; }
-    .modal { max-width: 100%; margin: 12px; }
-  }
-
-  /* ===== SCROLLBAR ===== */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb {
-    background: var(--border-light);
-    border-radius: 2px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
-  }
-
-  /* ===== UTILITY ===== */
-  .hidden { display: none !important; }
-  .text-muted { color: var(--text-muted); }
-  .gap-8 { gap: 8px; }
-  .flex { display: flex; }
-  .flex-center { align-items: center; }
-  .flex-wrap { flex-wrap: wrap; }
+/* ===== decorate modal ===== */
+.decorate-bar { display:flex; gap:10px; align-items:center; }
+.decorate-select { padding:8px 12px; border-radius:8px; border:1.5px solid #ccc; font-family:'Kanit',sans-serif; font-size:15px; }
+.decorate-open-btn { padding:8px 16px; border-radius:8px; background:#eee; border:none; cursor:pointer; font-family:'Kanit',sans-serif; }
+.decorate-modal { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index:99999; }
+.decorate-modal.active { display:flex; }
+.decorate-modal-card { width:1100px; max-width:95vw; background:#fff; border-radius:14px; overflow:hidden; display:flex; flex-direction:column; }
+.decorate-modal-header { padding:16px 20px; display:flex; justify-content:space-between; align-items:center; background:#111; color:#fff; }
+.decorate-title { font-size:18px; font-weight:600; }
+.decorate-count { font-size:14px; opacity:0.7; }
+.decorate-close-btn { background:none; border:none; color:#fff; font-size:22px; cursor:pointer; }
+.decorate-category-bar { padding:14px 20px; display:flex; gap:10px; flex-wrap:wrap; }
+.decorate-cat { padding:6px 16px; border-radius:999px; border:1.5px solid #ddd; background:#fff; cursor:pointer; font-size:14px; font-family:'Kanit',sans-serif; }
+.decorate-cat.active { background:#000; color:#fff; border-color:#000; }
+.decorate-grid-wrap { padding:10px 20px 20px; overflow-y:auto; max-height:60vh; }
+#decorateGrid { display:grid; grid-template-columns:repeat(7,1fr); gap:12px; }
+@media(max-width:1024px){ #decorateGrid { grid-template-columns:repeat(5,1fr); } }
+@media(max-width:768px){ #decorateGrid { grid-template-columns:repeat(3,1fr); } }
+.decorate-item { position:relative; border-radius:12px; border:2px solid #eee; overflow:hidden; cursor:pointer; background:#fafafa; }
+.decorate-item img { width:100%; display:block; }
+.decorate-item.selected { border-color:#00c853; }
+.decorate-order { position:absolute; top:6px; right:6px; background:black; color:#fff; font-size:14px; padding:2px 4px; border-radius:999px; }
+.decorate-name { padding:8px; font-size:14px; text-align:center; font-family:'Kanit',sans-serif; }
+.decorate-modal-footer { padding:14px 20px; border-top:1px solid #eee; }
+.decorate-confirm-btn { width:100%; padding:14px; background:#5b4bdb; color:#fff; font-size:16px; border:none; border-radius:10px; cursor:pointer; font-family:'Kanit',sans-serif; }
 </style>
+
+
+<link rel="stylesheet" type="text/css" href="css/cat-modal.css?v=1">
+
 </head>
 <body>
+<!-- Loading Overlay -->
 
-<!-- ===== ANTI-DEBUG OVERLAY ===== -->
-<div id="anti-debug-overlay">
-  <div class="icon"><i class="ti ti-alert-triangle"></i></div>
-  <h2>⚠️ ตรวจพบการเปิดเครื่องมือพัฒนา</h2>
-  <p>เพื่อความปลอดภัย กรุณาปิด DevTools และรีเฟรชหน้าเว็บ</p>
-  <button class="btn-reload" onclick="location.reload()">🔄 รีเฟรชหน้า</button>
+
+
+<!-- <nav>
+  <div class="logo"><a href="/">ป้ายเกม.com</a></div>
+  <div><a href="https://lin.ee/ah5mLJC" target="_blank">แจ้งปัญหา</a><a href="/">เทมเพลตอื่นๆ</a></div>
+</nav> -->
+
+<style>
+
+
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  white-space:nowrap; /* 🔥 ไม่ให้ข้อความแตก */
+}
+
+
+
+.pro-btn-nav{
+  background: linear-gradient(135deg,#ff7a00,#ff3d00); /* 🔥 ส้ม-แดง ตัดม่วง */
+  color:#fff;
+  padding:8px 16px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:800;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  box-shadow:0 6px 18px rgba(255,80,0,.35);
+  transition:.2s;
+  position:relative;
+}
+
+/* hover */
+.pro-btn-nav:hover{
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:0 10px 24px rgba(255,80,0,.45);
+}
+
+/* 🔥 effect กระพริบเบาๆ */
+.pro-btn-nav::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:999px;
+  background:rgba(255,255,255,0.15);
+  opacity:0;
+  animation:proPulse 2s infinite;
+}
+
+@keyframes proPulse{
+  0%{opacity:0}
+  50%{opacity:.25}
+  100%{opacity:0}
+}
+
+
+</style>
+
+<nav>
+  <div class="logo"><a href="/">ป้ายเกม.com</a></div>
+
+  <div class="nav-right">
+    <!-- <a href="/">เทมเพลตอื่นๆ</a> -->
+    <a href="https://lin.ee/ah5mLJC" target="_blank">แจ้งปัญหา</a>
+    <a href="/pro/login" class="pro-btn-nav">🚀 โหมดมืออาชีพ</a>
+  </div>
+</nav>
+<div class="wrapper">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <h3>🧰 เครื่องมือ (ส่วนบน)</h3>
+
+    <label class="label">อัปโหลดรูปพื้นหลัง</label>
+    <input type="file" id="profileFile" class="input" accept="image/*" />
+    <div class="helper">หลังเลือกไฟล์จะมีหน้าครอปให้จัดเฟรมตามส่วนบนของป้าย</div>
+
+
+<!-- ====== PLAY COUNT TOOL ====== -->
+<!-- ====== PLAY COUNT TOOL ====== -->
+<!-- <div class="tool-card" style="margin-top:14px">
+  <div style="font-weight:700;margin-bottom:6px">รูปจำนวนการเล่น</div>
+
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+    <label class="btn" style="cursor:pointer">
+      เลือกไฟล์
+      <input id="playCountUpload" type="file" accept="image/*" class="input">
+    </label>
+
+    <input id="playCountFrameColor" type="color" value="#ffffff"
+      title="เลือกสีกรอบ"
+      style="width:46px;height:46px;border:1px solid black;border-radius:8px;cursor:pointer">
+
+
+  </div>
+</div> -->
+ <label class="label">อัปโหลดรูปโปรไฟล์</label>
+<div style="display:flex;align-items:center;gap:8px;">
+  <input
+    type="file"
+    id="playCountUpload"
+    placeholder="เช่น 8999" accept="image/*"
+    style="flex:1;padding:10px 12px;border:1.5px solid #ccc;border-radius:8px;"
+  >
+
+
 </div>
 
-<!-- ===== APP ===== -->
-<div class="app">
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-icon">🎙️</div>
-      <div>
-        <div class="logo-text">Voice<span>Bot</span></div>
-        <div class="logo-sub">Discord Manager Pro</div>
-      </div>
+
+
+<!-- ====== CROP MODAL: PLAY COUNT ====== -->
+<div id="playCountCropModal" class="modal hidden"
+     style="position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:9999">
+  <div style="background:#111;padding:14px;border-radius:12px;max-width:92vw">
+    <div style="color:#fff;font-weight:700;margin-bottom:8px">ครอบรูป 477×659</div>
+    <div style="max-height:70vh;overflow:auto;background:#222;border-radius:8px">
+      <img id="playCountCropImg" alt="" style="max-width:85vw;display:block">
     </div>
-    <nav class="sidebar-nav">
-      <div class="nav-label">จัดการ</div>
-      <div class="nav-item active" onclick="showPage('bots')" id="nav-bots">
-        <i class="ti ti-robot"></i> บอทของฉัน
-        <span class="nav-badge green" id="nav-online-count">0</span>
-      </div>
-      <div class="nav-item" onclick="showPage('activity')" id="nav-activity">
-        <i class="ti ti-activity"></i> ประวัติกิจกรรม
-        <span class="nav-badge" id="nav-log-count">0</span>
-      </div>
-      <div class="nav-label">ระบบ</div>
-      <div class="nav-item" onclick="showPage('settings')" id="nav-settings">
-        <i class="ti ti-settings"></i> ตั้งค่า
-      </div>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="status">
-        <span class="dot"></span>
-        <span id="server-status">WebSocket Ready</span>
-      </div>
-      <div style="margin-top:6px;font-size:11px;">v2.0 • Direct Connection</div>
+    <div style="text-align:right;margin-top:10px">
+      <button id="playCountCancel" class="btn" style="margin-right:6px">ยกเลิก</button>
+      <button id="playCountConfirm" class="btn" style="background:#22c55e;color:#fff">ยืนยัน</button>
     </div>
+  </div>
+</div>
+
+
+<div style="margin-top: 10px;"> </div>
+
+    <label class="label">รหัสสินค้า</label>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+  <input
+    type="text"
+    id="productCodeInput"
+    placeholder="เช่น ROV-001"
+    style="flex:1;padding:10px 12px;border:1.5px solid #ccc;border-radius:8px;font-size:16px;font-family:'Kanit',sans-serif;"
+  >
+</div>
+
+    <label class="label" style="margin-top:10px;">ราคา</label>
+    <div style="display:flex;align-items:center;gap:8px;">
+  <input
+    type="number"
+    id="priceInput"
+    placeholder="เช่น 8999"
+    style="flex:1;padding:10px 12px;border:1.5px solid #ccc;border-radius:8px;font-size:16px;font-family:'Kanit',sans-serif;"
+  >
+</div>
+
+    <label class="label" style="margin-top:10px;">ดาวน์ผ่อน(⭐)</label>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+  <input
+    type="text"
+    id="downInstallInput"
+    placeholder="เช่น ผ่อน 5,500 ⭐ 1,000 รับไอดี"
+    style="flex:1;padding:10px 12px;border:1.5px solid #ccc;border-radius:8px;font-size:16px;font-family:'Kanit',sans-serif;"
+  >
+</div>
+
+    <label class="label">รายละเอียด 1</label>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+  <div>
+    <label style="font-size:12px;color:#666;margin-bottom:4px;display:block;">จำนวน Hero</label>
+    <input type="number" id="heroCountInput" placeholder="เช่น 100" min="0"
+      style="width:100%;padding:10px 12px;border:1.5px solid #ccc;border-radius:8px;font-size:16px;font-family:'Kanit',sans-serif;">
+  </div>
+  <div>
+    <label style="font-size:12px;color:#666;margin-bottom:4px;display:block;">จำนวนสกิน</label>
+    <input type="number" id="skinCountInput" placeholder="เช่น 120" min="0"
+      style="width:100%;padding:10px 12px;border:1.5px solid #ccc;border-radius:8px;font-size:16px;font-family:'Kanit',sans-serif;">
+  </div>
+</div>
+
+    <label class="label">รายละเอียด 2</label>
+<div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+  <input type="text" id="detail2Input" placeholder="เช่น การีน่าสะอาด"
+    style="flex:1;padding:10px 12px;border:1.5px solid #ccc;border-radius:8px;font-size:16px;font-family:'Kanit',sans-serif;">
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;">
+  <div>
+    <label style="display:block;margin-bottom:6px;font-weight:600;">ระดับ VIP</label>
+    <select id="vipSelect" style="width:100%;padding:10px 12px;border:1.5px solid #ccc;border-radius:8px;font-size:16px;font-family:'Kanit',sans-serif;box-sizing:border-box;background:#fff;">
+      <option value="">-- เลือกระดับ VIP --</option>
+    </select>
+  </div>
+  <div>
+    <label style="display:block;margin-bottom:6px;font-weight:600;">จำนวนการเติมเงิน</label>
+    <input type="number" id="vipTopupAmount" placeholder="เช่น 5000"
+      style="width:100%;padding:10px 12px;border:1.5px solid #ccc;border-radius:8px;font-size:16px;font-family:'Kanit',sans-serif;box-sizing:border-box;">
+  </div>
+</div>
+
+<label class="label" style="margin-top:12px;">เลือกสี</label>
+<div id="shadowGradientPicker" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;"></div>
+
+<h3 style="margin-top:18px;">🖼️ เลือกป้ายประกาศ/ปุ่ม/กรอบ</h3>
+<div class="decorate-bar">
+  <select id="decorateTypeSelect" class="decorate-select">
+    <option value="">เลือกของตกแต่ง</option>
+    <option value="banner">ป้ายสังหาร</option>
+    <option value="button">ปุ่มกด</option>
+    <option value="frame">frame</option>
+  </select>
+  <button id="openDecoratePopup" class="decorate-open-btn">ดูของ</button>
+</div>
+<button id="clearDecorateBtn" style="background:#ff5252;color:#fff;border:none;padding:10px 16px;border-radius:8px;font-weight:600;cursor:pointer;margin-top:10px;font-family:'Kanit',sans-serif;">
+  ลบของตกแต่งทั้งหมด
+</button>
+
+<div class="decorate-modal" id="decorateModal">
+  <div class="decorate-modal-card">
+    <div class="decorate-modal-header">
+      <div class="decorate-title">เลือกรูป <span class="decorate-count">(เลือก 0)</span><br><small style="font-size:11px;color:#ffe800;">หากต้องการลบ ให้กดเลือกออก</small></div>
+      <button class="decorate-close-btn" id="decorateCloseBtn">✕</button>
+    </div>
+    <div class="decorate-category-bar" id="decorateCategoryBar"></div>
+    <div class="decorate-grid-wrap">
+      <div class="decorate-grid" id="decorateGrid"></div>
+    </div>
+    <div class="decorate-modal-footer">
+      <button class="decorate-confirm-btn" id="decorateConfirmBtn">ยืนยันการเลือก</button>
+    </div>
+  </div>
+</div>
+
+<!-- <h3 style="margin-top: 10px;font-size: 16px;">รูปแบบตัวอักษร:</h3>
+
+<select id="textStyle">
+  <option value="normal" selected>ปกติ</option>
+  <option value="neon">นีออนเรืองแสง</option>
+  <option value="limwhite">ขอบขาว</option>
+</select>
+
+<div class="tool-row" style="display:flex;align-items:center;gap:10px;">
+  <label for="fontSelect" style="font-weight:700;">ฟอนต์:</label>
+  <select id="fontSelect" style="padding:6px 10px;border-radius:8px;border:1px solid #ccc;flex:1;">
+    <option value="Kanit" style="font-family:'Kanit', sans-serif;">Kanit (การีน่า)</option>
+    <option value="Prompt" style="font-family:'Prompt', sans-serif;">Prompt (การีน่า)</option>
+    <option value="Itim" style="font-family:'Itim', sans-serif;">Itim (การีน่า)</option>
+    <option value="Bai Jamjuree" style="font-family:'Bai Jamjuree', sans-serif;">Bai Jamjuree (การีน่า)</option>
+    <option value="Chakra Petch" style="font-family:'Chakra Petch', sans-serif;">Chakra Petch (การีน่า)</option>
+    <option value="Anuphan" style="font-family:'Anuphan', sans-serif;">Anuphan (การีน่า)</option>
+  </select>
+</div>
+ -->
+
+
+
+<select id="textStyle" style="display:none">
+  <option value="normal" selected>ปกติ</option>
+</select>
+
+
+    <!-- ====== เลือกตัวละคร + สกิน ====== -->
+    <h3 style="margin-top:18px;">🎮 เลือกตัวละคร & สกิน</h3>
+
+   <label class="label">เลือกฮีโร่ (พิมพ์ค้นหาได้)</label>
+<div class="dropdown-container">
+ <!--  <input type="text" id="heroSearch" class="input" placeholder="พิมพ์ชื่อฮีโร่..." autocomplete="off"> -->
+
+<div class="input-clear-wrap" style="position:relative;width:100%;">
+  <input 
+    type="text" 
+    id="heroSearch" 
+    placeholder="พิมพ์ชื่อฮีโร่..." 
+    style="
+      width:100%;
+      padding:8px 32px 8px 10px;  /* padding ขวาเผื่อปุ่ม X */
+      border:1px solid #ccc;
+      border-radius:6px;
+      font-size:15px;
+      line-height:1.5;
+      box-sizing:border-box;
+    "
+  >
+  <span 
+    id="clearHeroSearch"
+    style="
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      cursor:pointer;
+      font-size:16px;
+      color:#aaa;
+      
+      user-select:none;
+      transition:color 0.2s;
+    "
+    onmouseover="this.style.color='#666'"
+    onmouseout="this.style.color='#aaa'"
+  >✕</span>
+</div>
+
+  <div id="heroList" class="dropdown-list"></div>
+</div>
+<button class="btn-ghost" id="openSkinsBtn" style="margin-top:10px;background:#eee;color:#222;">ดูสกินของตัวนี้</button>
+
+
+    <!-- Slider + Preview -->
+    <!-- Slider + Preview -->
+<div class="preview-header">
+  <strong>สกินที่เลือก</strong>
+  <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:13px;color:#666">ต่อแถว:</span>
+      <input type="range" min="5" max="18" value="5" id="perRowRange" class="range" />
+      <span id="perRowLabel" style="font-size:13px;color:#333">5</span>
+    </div>
+
+    <!-- ✅ ย้ายมาอยู่ในนี้ เพื่อให้ขึ้นบรรทัดใหม่ใต้ slider -->
+    <div id="autoAdjustNotice" 
+         style="color:#888;font-size:10px;display:none;margin-top:4px;">
+    </div>
+  </div>
+</div>
+
+<button id="btnSortByCategory" class="btn" style="color: #222;">
+  เรียงรูปอัตโนมัติ <span style="background:#22c55e; color:white; font-size:10px; padding:1px 5px; border-radius:99px;">NEW</span>
+</button>
+    <div id="previewGrid" class="preview-grid"></div>
+    <!-- คำเตือน -->
+     <div style="margin-top:8px;font-size:12px;color:#b36b00;">
+      ⚠️ ดาวน์โหลดฟรี: เรียงสกินได้สูงสุด 15 รูป
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:#b36b00;">
+      ⚠️ ดาวน์โหลดพรีเมี่ยม: เรียงสกินได้สูงสุด 126 รูป
+    </div>    <button id="clearAllSkins" class="btn" style="background:#ff4d4f;margin-top:10px;">🗑️ ลบสกินทั้งหมด</button>
+<div style="font-size:12px;color:#555;margin-top:6px;">
+  📌 กดค้างที่รูปเพื่อลากสลับตำแหน่งได้<br>
+  ⚠️ จำนวนรูปต่อแถวจะแสดงจริงบนป้าย กด “ดูป้าย” เพื่อดูของจริง
+</div>
+
+    <div style="margin-top:8px;font-size:12px;color:#b36b00;">
+      ⚠️ หากเลือกสกินน้อยกว่า 5 อัน ระบบจะสร้างสกินซ้ำให้จนครบ 5 อัตโนมัติ (เฉพาะบนรูปป้าย)
+    </div>
+
+  
   </aside>
 
-  <!-- MAIN -->
-  <div class="main">
-    <!-- TOPBAR -->
-    <header class="topbar">
-      <div class="topbar-left">
-        <div class="topbar-title" id="page-title">บอทของฉัน</div>
-        <div class="topbar-sub" id="page-sub">จัดการบอท Discord Voice Channel ทั้งหมด</div>
-      </div>
-      <div class="topbar-actions" id="topbar-actions">
-        <div class="connection-status">
-          <span class="dot offline" id="status-dot"></span>
-          <span id="status-text">เชื่อมต่อ...</span>
-        </div>
-        <button class="btn btn-primary" onclick="openAddModal()">
-          <i class="ti ti-plus"></i> เพิ่มบอท
+  <!-- STAGE -->
+  <main class="stage" id="stage">
+    <!-- <img id="posterPreview" src="/img/sample-poster.jpg" alt="preview" style="width:100%;border-radius:12px;"> -->
+    <canvas id="posterCanvas" width="1812" height="2048"></canvas>
+    
+
+    <div class="mobile-toggles" id="mobileToggles">
+      <button class="toggle-btn" id="btnEdit">✏️ แก้ไขป้าย</button>
+      
+    </div>
+<!-- ส่วนเลือกฟิลเตอร์ใน sidebar -->
+
+<div class="mb-3">
+  <label style="font-weight:600;">🎨 ฟิลเตอร์สี:</label>
+  <select id="filterSelect" class="form-select" onchange="updateFilter()">
+    <option value="none">ไม่มีฟิลเตอร์</option>
+     <option value="bright" selected>สีชัด นุ่มนวน</option>
+    <option value="bright1" >สดใส นุ่มนวน</option>
+    <option value="PopBright">PopBright (สดใส)</option>
+  <option value="SunnyDay">SunnyDay (อุ่นนิดๆ)</option>
+  <!-- <option value="CleanCool">CleanCool (โทนเย็นใส)</option> -->
+  <option value="CrystalClear">CrystalClear (ใส คม เด่น)</option>
+  <option value="SoftGlow">SoftGlow (ฟุ้งนิดๆ)</option>
+  <option value="VividEdge">VividEdge (สีคม)</option>
+  <option value="NaturalBoost">NaturalBoost (ธรรมชาติสดใส)</option>
+    <!-- <option value="dark">เข้มเท่</option>
+    <option value="warm">โทนอุ่น</option>
+    <option value="cool">โทนเย็น</option> -->
+  </select>
+</div>
+
+<a id="hiddenDownloadLink" hidden download>ดาวน์โหลด</a>
+<small  id="status_d">📢 ดาวน์โหลดฟรี: เรียงสกินได้สูงสุด 15 รูป (มากกว่านี้ใช้พรีเมี่ยม)</small>    <div class="actions">
+      <button class="btn btn-free" id="btnFree" >ดาวน์โหลดฟรี (ติดลายน้ำ)</button>
+      <button class="btn btn-premium" id="downloadPremiumBtn">ดาวน์โหลดพรีเมียม</button>
+    </div>
+    
+  </main>
+
+<!-- Popup เลือกช่องทางชำระ -->
+<!-- Popup เลือกช่องทางชำระ -->
+<div id="paySelectPopup" class="popup-overlay hidden">
+  <div class="popup-box" style="max-width:340px;">
+    <div class="popup-header" style="background:#222;color:#fff;">
+      <h3 style="margin:0;font-size:20px;">ดาวน์โหลดพรีเมียม</h3>
+    </div>
+    <div class="popup-body" style="padding:20px;">
+      <p style="font-size:15px;color:#333;line-height:1.6;">
+        🔓 ปลดล็อกภาพแบบ <strong>ความละเอียดเต็ม</strong><br>
+        ❌ <strong>ไม่มีลายน้ำ</strong><br>
+        💾 บันทึกได้ทันที พร้อมใช้ในโพสต์ขาย<br><br>
+        <strong>ราคาเพียง 5 บาท</strong>
+      </p>
+
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:15px;">
+        <button class="pay-option" data-type="promptpay" style="background:#007AFF;color:#fff;">
+          💠 ชำระผ่าน PromptPay
         </button>
-      </div>
-    </header>
 
-    <!-- CONTENT -->
-    <div class="content">
-      <!-- STATS -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon purple"><i class="ti ti-robot"></i></div>
-          <div class="stat-info">
-            <div class="stat-label">บอททั้งหมด</div>
-            <div class="stat-value purple" id="stat-total">0</div>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon green"><i class="ti ti-volume"></i></div>
-          <div class="stat-info">
-            <div class="stat-label">กำลังออนไลน์</div>
-            <div class="stat-value green" id="stat-online">0</div>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon amber"><i class="ti ti-clock"></i></div>
-          <div class="stat-info">
-            <div class="stat-label">กำลังเชื่อมต่อ</div>
-            <div class="stat-value amber" id="stat-connecting">0</div>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon red"><i class="ti ti-player-stop"></i></div>
-          <div class="stat-info">
-            <div class="stat-label">หยุดทำงาน</div>
-            <div class="stat-value red" id="stat-stopped">0</div>
-          </div>
-        </div>
+      <!--   <button class="pay-option"
+        data-type="promptpay"
+        style="background:#999;color:#fff;cursor:not-allowed;"
+        disabled>
+  🚧 ปิดปรับปรุงชั่วคราว (PromptPay)
+</button> -->
+
+        
+        <button class="pay-option"  data-type="wallet" style="background:#E53935;color:#fff;">
+          💸 ชำระผ่าน TrueWallet
+        </button>
+        <span class="payment-more-info" style="font-size: 8px; color: #DB0000; margin-top: -9px;">TrueWallet มีค่าธรรมเนียม 2.9%</span>
       </div>
 
-      <!-- BOTS PAGE -->
-      <div class="bots-page" id="bots-page">
-        <div class="section-header">
-          <div>
-            <div class="section-title">📋 รายการบอท</div>
-            <div class="section-sub">คลิก <strong>เริ่ม</strong> เพื่อให้บอทเข้าช่องเสียง</div>
-          </div>
-          <div class="section-actions">
-            <button class="btn btn-outline btn-sm" onclick="startAllBots()">
-              <i class="ti ti-player-play"></i> เริ่มทั้งหมด
-            </button>
-            <button class="btn btn-outline btn-sm" onclick="stopAllBots()">
-              <i class="ti ti-player-stop"></i> หยุดทั้งหมด
-            </button>
-          </div>
-        </div>
-        <div class="bots-grid" id="bots-grid">
-          <div class="empty-state" id="empty-state">
-            <div class="icon"><i class="ti ti-robot"></i></div>
-            <h3>ยังไม่มีบอท</h3>
-            <p>กดปุ่ม <strong>เพิ่มบอท</strong> เพื่อเพิ่มบอท Discord<br>ของคุณเข้ามาในระบบ</p>
-          </div>
-        </div>
+      <button id="closePaySelect" class="btn-cancel" style="margin-top:18px;">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+<div id="categorySortModal" class="cat-sort-modal">
+  <div class="cat-sort-box">
+    <h3 class="cat-sort-title">✨ เรียงรูปอัตโนมัติ</h3>
+    <center><small class="">📌เลือกรูปให้เสร็จก่อน ค่อยเรียง</small></center>
+    <center>แตะ &#8942;&#8942; ที่ประเภทสกิน แล้วลากเพื่อเปลี่ยนตำแหน่ง</center>
+    
+
+    <ul id="categoryList" class="cat-sort-list"></ul>
+
+    <div class="cat-sort-actions">
+      <button id="applyCategorySort" class="cat-sort-btn cat-sort-btn-primary">
+        เรียง
+      </button>
+      <button class="cat-sort-btn" onclick="closeCategorySort()">
+        ยกเลิก
+      </button>
+    </div>
+  </div>
+</div><!-- Popup QR Code -->
+<div id="payQrPopup" class="popup-overlay hidden">
+  <div class="popup-box">
+    <div class="popup-header">
+      <img id="payMethodLogo" src="/icons/promptpay_logo.png" alt="PromptPay" style="height:40px;">
+    </div>
+
+    <div class="popup-body">
+      <p style="font-size:14px;color:#333;background:#eaf9ff;padding:8px 10px;border-radius:6px;margin-bottom:10px;">
+        QR Code สแกนจ่ายได้เพียงครั้งเดียวเท่านั้น โปรดอย่าสแกนซ้ำ<br>
+        แคปหน้าจอ หรือสแกน QR Code นี้เพื่อชำระเงิน<br>
+        ช่องทางชำระเงิน : <strong id="payMethodText" style="color:#007aff;">สแกน พร้อมเพย์ ในแอปธนาคาร!!</strong>
+      </p>
+
+      <p style="font-size:16px;color:#111;">กรุณาชำระเงินภายใน</p>
+      <div id="qrTimer" style="font-size:28px;font-weight:700;margin-bottom:10px;">5:00</div>
+
+      <div class="qr-area">
+        <img id="qrImage" src="/api/qr.php?amount=5" alt="QR Code" style="width:260px;height:260px;border:3px solid #000;padding:5px;background:#fff;border-radius:10px;">
       </div>
 
-      <!-- ACTIVITY PAGE -->
-      <div class="log-page" id="activity-page">
-        <div class="section-header">
-          <div>
-            <div class="section-title">📜 ประวัติกิจกรรม</div>
-            <div class="section-sub">บันทึกการเชื่อมต่อและเหตุการณ์ทั้งหมด</div>
-          </div>
-          <button class="btn btn-outline btn-sm" onclick="clearLog()">
-            <i class="ti ti-trash"></i> ล้างประวัติ
-          </button>
-        </div>
-        <div class="log-table">
-          <div class="log-row header">
-            <div>เวลา</div>
-            <div>ประเภท</div>
-            <div>รายละเอียด</div>
-          </div>
-          <div id="activity-log-body">
-            <div style="text-align:center;padding:60px 24px;color:var(--text-muted);">
-              <i class="ti ti-file-description" style="font-size:40px;display:block;margin-bottom:12px;opacity:0.3"></i>
-              ยังไม่มีประวัติกิจกรรม
-            </div>
-          </div>
-        </div>
-      </div>
+      <p style="margin-top:12px;color:#333;font-size:15px;">
+       <!--  <strong id="payRef">5345345 AS</strong><br> -->
+        จำนวนเงิน: <span id="qrAmount" style="color:#008000;font-weight:700;">5.00 บาท</span>
+      </p>
 
-      <!-- SETTINGS PAGE -->
-      <div class="settings-page" id="settings-page">
-        <div class="settings-section">
-          <div class="settings-section-title"><i class="ti ti-lock"></i> ความปลอดภัย</div>
-          <div class="toggle-row">
-            <div>
-              <div class="toggle-label">ซ่อนโทเคนเสมอ</div>
-              <div class="toggle-sub">ปิดบังโทเคนในหน้าบอท</div>
-            </div>
-            <div class="toggle on" onclick="this.classList.toggle('on')"></div>
-          </div>
-          <div class="toggle-row">
-            <div>
-              <div class="toggle-label">บันทึกข้อมูลในเบราว์เซอร์</div>
-              <div class="toggle-sub">เก็บข้อมูลบอทใน localStorage</div>
-            </div>
-            <div class="toggle on" id="localstorage-toggle" onclick="toggleLocalStorage(this)"></div>
-          </div>
-        </div>
-        <div class="settings-section">
-          <div class="settings-section-title"><i class="ti ti-database"></i> ข้อมูล</div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
-            <button class="btn btn-outline btn-sm" onclick="exportData()">
-              <i class="ti ti-download"></i> Export JSON
-            </button>
-            <button class="btn btn-outline btn-sm" onclick="document.getElementById('import-input').click()">
-              <i class="ti ti-upload"></i> Import JSON
-            </button>
-            <input type="file" id="import-input" accept=".json" style="display:none" onchange="importData(event)">
-          </div>
-          <p style="font-size:12px;color:var(--text-muted);line-height:1.7;">
-            ข้อมูลทั้งหมดถูกเก็บในเบราว์เซอร์ของคุณเท่านั้น<br>
-            แนะนำ Export สำรองข้อมูลไว้เป็นระยะ
-          </p>
-        </div>
-        <div class="settings-section">
-          <div class="settings-section-title"><i class="ti ti-info-circle"></i> ข้อมูลระบบ</div>
-          <div style="font-size:13px;color:var(--text-secondary);line-height:2;">
-            <p>🔗 <strong>เชื่อมต่อแบบ WebSocket Direct</strong> ไปยัง Discord Gateway</p>
-            <p>🔒 <strong>ไม่ต้องมี Backend Server</strong> — ทำงานในเบราว์เซอร์โดยตรง</p>
-            <p>🔄 <strong>Auto-Reconnect</strong> เมื่อเชื่อมต่อหลุด</p>
-            <p style="margin-top:8px;color:var(--text-muted);font-size:12px;">
-              ⚠️ โทเค่นของคุณจะถูกเก็บในเครื่องเท่านั้น ไม่ถูกส่งออกไปไหน
-            </p>
-          </div>
-        </div>
-      </div>
+      <p style="background:#FFD700;color:#000;font-size:13px;padding:6px 8px;border-radius:5px;margin-top:8px;">
+        หน้านี้จะถูกอัพเดทเมื่อชำระเงินเสร็จสมบูรณ์ภายใน 10-30 วินาที
+      </p>
 
+      <p style="font-size:13px;color:#777;margin-top:6px;">
+        ❌ ห้ามกด “ยกเลิกรายการ” หากชำระเงินแล้ว
+      </p>
+    </div>
+
+    <div class="popup-footer">
+      <button id="cancelPay" class="btn-cancel">ยกเลิก</button>
     </div>
   </div>
 </div>
 
-<!-- ===== MODAL ===== -->
-<div class="modal-backdrop" id="bot-modal">
-  <div class="modal">
+
+
+
+
+
+</div>
+<div class="mobile-toggles" id="mobileToggles">
+      <!-- <button class="toggle-btn" id="btnEdit">✏️ แก้ไข</button> -->
+      <button class="toggle-btn hidden btn-view" id="btnPreview">👁️ ดูป้าย</button>
+    </div>
+
+
+
+<div class="container" id="details_pai">
+  <h1>ทำป้าย ROV ออนไลน์ ฟรี! สร้างป้ายขายไอดีสุดเท่ได้เองในไม่กี่นาที</h1>
+
+<p>ถ้าคุณเป็นผู้เล่น <strong>ROV (Arena of Valor)</strong> ที่อยากขายไอดีเกม บน Facebook หรือกลุ่มเกมต่าง ๆ — บทความนี้จะช่วยคุณได้แน่นอน! เพราะวันนี้เราจะพาคุณมารู้จักกับเครื่องมือ <strong>“ทำป้าย ROV ออนไลน์”</strong> จาก <a href="https://ป้ายเกม.com" target="_blank">ป้ายเกม.com</a> เว็บไซต์สร้างป้ายขายไอดีเกมที่ใช้งานง่ายที่สุดในไทยตอนนี้!</p>
+
+
+
+<h2>ทำไมต้องใช้ระบบทำป้าย ROV จาก ป้ายเกม.com</h2>
+<ul>
+  <li>✅ ใช้งานง่าย — ทำป้ายได้ภายใน 3 นาที ระบบจัดวางรูปให้อัตโนมัติ</li>
+  <li>🎨 ปรับแต่งได้ไว — เลือกรูปโปร, ตัวละคร, สกิน, ราคา และรายละเอียดได้ครบ</li>
+  <li>📱 รองรับมือถือ — ออกแบบบนมือถือได้เลย สะดวกมาก</li>
+  <li>💾 ดาวน์โหลดได้ทันที — กดโหลดรูปพร้อมโพสต์ขายได้ทันที</li>
+  <li>🆓 ใช้งานฟรี ไม่จำกัด</li>
+</ul>
+
+<h2>วิธีการใช้งานระบบ “ทำป้าย ROV”</h2>
+<p>ไม่ว่าคุณจะเป็นมือใหม่หรือคนขายไอดีมืออาชีพ ก็สามารถสร้างป้ายได้ง่ายมากเพียงทำตามขั้นตอนต่อไปนี้:</p>
+
+
+
+<h3>2. อัปโหลดรูปโปรไฟล์ของไอดี</h3>
+<p>เลือกรูปภาพหน้าปกของไอดีที่ต้องการขาย ระบบจะช่วยครอบ (crop) ให้อัตโนมัติ เพื่อให้พอดีกับกรอบป้ายที่ออกแบบไว้</p>
+
+<h3>3. กรอกรายละเอียดสำคัญ</h3>
+<p>เช่น  ราคา, รายละเอียดไอดี เช่น “มีฮีโร่ 120 ตัว / สกิน 400+ / แรงค์คอน / การีน่าสะอาด” เป็นต้น</p>
+
+<h3>4. เลือกฮีโร่และสกิน</h3>
+<p>คลิกเลือกรูปฮีโร่ที่ต้องการแสดงบนป้าย (เลือกได้หลายรูป) แล้วจัดเรียงตามลำดับที่ต้องการ เช่น แถวละ 5 หรือ 15 รูป ตามจำนวนที่คุณมี</p>
+
+<h3>5. ปรับแต่งฟิลเตอร์สี</h3>
+<p>เลือกฟิลเตอร์สี ที่ต้องการ มีให้เลือก 7 แบบ</p>
+
+<h3>6. ดาวน์โหลดป้าย ROV ของคุณ!</h3>
+<p>เมื่อออกแบบเสร็จแล้ว กดปุ่ม <strong>“ดาวน์โหลดฟรี”</strong> เพื่อบันทึกรูปภาพลงในมือถือหรือคอม พร้อมโพสต์ขายในกลุ่ม Facebook ได้เลยทันที</p>
+
+<img src="/images/id2.jpg" alt="ทำป้าย ROV" id="img_preview" >
+
+<h2>เคล็ดลับ: ป้ายขายไอดี ROV ที่ดีควรมีอะไรบ้าง?</h2>
+<ol>
+  <li><strong>รูปชัดเจน</strong> – ใช้รูปโปรไฟล์ที่เห็นตัวละครชัด ๆ ดูน่าเชื่อถือ</li>
+  <li><strong>ระบุราคาแน่นอน</strong> – ใส่ราคาชัดเจน เช่น 1,200 บาท / พร้อมต่อรองได้</li>
+  <li><strong>โชว์ฮีโร่และสกินเด่น</strong> – แสดงฮีโร่หายากหรือสกินระดับตำนาน</li>
+  <li><strong>บอกข้อมูลครบ</strong> – มีฮีโร่ 120 ตัว สกิน 400 แรงค์คอน การีน่าสะอาด</li>
+  
+</ol>
+
+<h2>คำถามที่พบบ่อยเกี่ยวกับการทำป้าย ROV</h2>
+
+<h3>❓ ต้องสมัครสมาชิกก่อนใช้งานไหม</h3>
+<p>ไม่ต้องครับ ระบบ <strong>ป้ายเกม.com</strong> เปิดให้ใช้งานฟรีโดยไม่ต้องสมัครสมาชิก</p>
+
+<h3>❓ สามารถใช้ในมือถือได้ไหม</h3>
+<p>ได้แน่นอน! เว็บไซต์ถูกออกแบบให้รองรับทั้งมือถือและคอมพิวเตอร์</p>
+
+<h3>❓ อยากได้ป้ายแบบไม่มีลายน้ำทำได้ไหม</h3>
+<p>ทำได้ครับ เพียงเลือกโหมด <strong>ดาวน์โหลดพรีเมียม</strong> ระบบจะสร้างไฟล์ที่ไม่มีลายน้ำให้โดยอัตโนมัติ</p>
+
+<h3>❓ รองรับเฉพาะเกม ROV เท่านั้นไหม</h3>
+<p>ตอนนี้มี ROV เป็นหลัก แต่ในอนาคตจะเพิ่มเกมอื่น ๆ เช่น Free Fire และ PUBG Mobile ด้วย</p>
+
+<h2>สรุป</h2>
+<p>เครื่องมือ <strong>ทำป้าย ROV</strong> จาก ป้ายเกม.com ถือเป็นตัวช่วยที่ทั้งฟรีและใช้งานง่าย เหมาะกับคนที่อยากขายไอดีแบบดูดีและมืออาชีพและรวดเร็ว ใครที่ยังไม่เคยลอง แนะนำให้เข้าไปใช้งานได้เลยวันนี้ — สร้างป้ายเท่ ๆ ของคุณเองได้ในไม่กี่นาที!</p>
+</div>
+
+
+
+
+<!-- ✅ Popup พรีเมียมแบบ custom -->
+<div id="premiumPopup" class="premium-overlay hidden">
+  <div class="premium-box">
+    <button class="close-btn" id="closePremium">×</button>
+    <h2>✅ ชำระเงินสำเร็จ</h2>
+    <p>ปลดล็อกดาวน์โหลดแบบ <b>พรีเมียม</b> ได้แล้ว</p>
+
+    <div id="downloadArea">
+      <button id="downloadPremiumBtn2" class="download-btn">
+        📥 ดาวน์โหลดตอนนี้
+      </button>
+    </div>
+
+    <div id="loadingArea" class="hidden">
+      <div class="spinner"></div>
+      <p style="margin-top:10px;">กำลังเตรียมไฟล์ดาวน์โหลด...</p>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- CROP MODAL -->
+<div class="modal" id="cropModal">
+  <div class="modal-card">
     <div class="modal-header">
-      <div class="modal-icon"><i class="ti ti-robot"></i></div>
-      <div>
-        <div class="modal-title" id="modal-title">เพิ่มบอทใหม่</div>
-        <div class="modal-sub">กรอกข้อมูลบอท Discord ของคุณ</div>
-      </div>
-      <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
+      <strong>ครอปรูปหน้าโปร (อัตราส่วนเท่ากับส่วนบนของป้าย)</strong>
+      <button class="btn-ghost" id="cropClose">ปิด</button>
+    </div>
+    <div class="modal-body"><img id="cropImage" alt="Crop source"/></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="cropReset">รีเซ็ต</button>
+      <button class="btn-gold" id="cropConfirm">ยืนยันการครอป</button>
+    </div>
+  </div>
+</div>
+
+<!-- SKINS POPUP -->
+<div class="modal skins-modal" id="skinsModal">
+  <div class="modal-card" style="width:980px;max-width:96vw;">
+    <div class="modal-header">
+      <strong id="skinsTitle">เลือกสกิน</strong>
+      <button class="btn-ghost" id="skinsClose">ปิด</button>
     </div>
     <div class="modal-body">
-      <div class="tabs" id="modal-tabs">
-        <div class="tab active" onclick="switchTab('bot')">🤖 บอท</div>
-        <div class="tab" onclick="switchTab('channel')">🔊 ช่องเสียง</div>
-      </div>
-
-      <div id="tab-bot">
-        <div class="form-group">
-          <label class="form-label"><i class="ti ti-id-badge"></i> ชื่อบอท <span class="form-required">*</span></label>
-          <input type="text" id="bot-name-input" placeholder="เช่น Music Bot #1">
-        </div>
-        <div class="form-group">
-          <label class="form-label"><i class="ti ti-key"></i> Bot Token <span class="form-required">*</span></label>
-          <input type="password" id="bot-token-input" placeholder="MTEx...xxxx.xxxxxx.xxxxxxxxxxxxxxxxxxxxxxx">
-          <div class="form-hint">หาได้จาก Discord Developer Portal → Bot → Token</div>
-        </div>
-        <div class="form-group">
-          <label class="form-label"><i class="ti ti-server"></i> Server ID (Guild ID) <span class="form-required">*</span></label>
-          <input type="text" id="bot-guild-input" placeholder="เช่น 123456789012345678">
-          <div class="form-hint">คลิกขวาที่เซิร์ฟเวอร์ → Copy Server ID</div>
-        </div>
-      </div>
-
-      <div id="tab-channel" style="display:none">
-        <div class="form-group">
-          <label class="form-label"><i class="ti ti-volume"></i> Voice Channel ID <span class="form-required">*</span></label>
-          <input type="text" id="bot-channel-input" placeholder="เช่น 987654321098765432">
-          <div class="form-hint">คลิกขวาที่ช่องเสียง → Copy Channel ID</div>
-        </div>
-        <div class="form-group">
-          <label class="form-label"><i class="ti ti-microphone-off"></i> Self Mute</label>
-          <select id="bot-mute-input">
-            <option value="true">ปิดเสียง (Mute)</option>
-            <option value="false">เปิดเสียง</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label"><i class="ti ti-headphones-off"></i> Self Deaf</label>
-          <select id="bot-deaf-input">
-            <option value="true">ปิดหูฟัง (Deaf)</option>
-            <option value="false">ไม่ปิด</option>
-          </select>
-        </div>
-      </div>
+      <div class="skins-grid" id="skinsGrid"></div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal()">ยกเลิก</button>
-      <button class="btn btn-primary" onclick="saveBot()"><i class="ti ti-check"></i> <span id="save-btn-label">เพิ่มบอท</span></button>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="skinsClear">ล้างที่เลือก</button>
+      <button class="btn-gold" id="skinsConfirm">✅ ยืนยันเลือกสกิน</button>
     </div>
   </div>
 </div>
 
-<!-- ===== CONFIRM DIALOG ===== -->
-<div class="confirm-dialog" id="confirm-dialog">
-  <div class="confirm-box">
-    <div class="confirm-icon"><i class="ti ti-alert-triangle"></i></div>
-    <div class="confirm-title" id="confirm-title">ยืนยันการลบ</div>
-    <div class="confirm-msg" id="confirm-msg">คุณต้องการลบบอทนี้ใช่หรือไม่?</div>
-    <div class="confirm-actions">
-      <button class="btn btn-outline" onclick="closeConfirm()">ยกเลิก</button>
-      <button class="btn btn-danger" id="confirm-ok-btn" onclick="confirmOk()">ลบ</button>
-    </div>
-  </div>
-</div>
+<script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
 
-<!-- ===== TOAST ===== -->
-<div class="toast-container" id="toast-container"></div>
-
-<!-- ===== MAIN SCRIPT ===== -->
 <script>
-// ============================================================
-//  ANTI-INSPECT - Full Protection
-// ============================================================
 
-(function antiInspect() {
-  'use strict';
-  
-  // ป้องกันคลิกขวา
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
-  }, true);
 
-  // ป้องกัน F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S, Ctrl+P
-  document.addEventListener('keydown', function(e) {
-    const key = e.key;
-    const ctrl = e.ctrlKey || e.metaKey;
-    const shift = e.shiftKey;
-    
-    if (key === 'F12' ||
-        (ctrl && shift && (key === 'I' || key === 'J' || key === 'C')) ||
-        (ctrl && (key === 'U' || key === 'S' || key === 'P')) ||
-        key === 'PrintScreen') {
-      e.preventDefault();
-      e.stopPropagation();
-      showToast('⚠️ ไม่สามารถเปิดเครื่องมือพัฒนาได้', 'error');
-      return false;
-    }
-  }, true);
 
-  // ป้องกันการเลือกข้อความ
-  document.addEventListener('selectstart', function(e) {
-    e.preventDefault();
-    return false;
-  }, true);
 
-  // ป้องกันการ drag
-  document.addEventListener('dragstart', function(e) {
-    e.preventDefault();
-    return false;
-  }, true);
-
-  // ป้องกันการ copy
-  document.addEventListener('copy', function(e) {
-    e.preventDefault();
-    showToast('⚠️ ไม่สามารถคัดลอกได้', 'error');
-    return false;
-  }, true);
-
-  // ป้องกันการ paste
-  document.addEventListener('paste', function(e) {
-    e.preventDefault();
-    return false;
-  }, true);
-
-  // ตรวจจับ DevTools
-  let devtoolsOpen = false;
-  const element = new Image();
-  Object.defineProperty(element, 'id', {
-    get: function() {
-      devtoolsOpen = true;
-      document.getElementById('anti-debug-overlay').classList.add('show');
-    }
-  });
-  
-  let frameCount = 0;
-  function detectDevTools() {
-    frameCount++;
-    if (frameCount > 100) {
-      console.log('%c', element);
-      frameCount = 0;
-    }
-    requestAnimationFrame(detectDevTools);
-  }
-  requestAnimationFrame(detectDevTools);
-
-  // ฆ่า console
-  console.log = function() {};
-  console.warn = function() {};
-  console.error = function() {};
-  console.info = function() {};
-  console.debug = function() {};
-  console.trace = function() {};
-})();
-
-// ============================================================
-//  DATA STORE
-// ============================================================
-
-let bots = [];
-let activityLog = [];
-let editingId = null;
-let confirmCallback = null;
-let uptimeIntervals = {};
-let wsConnections = {};
-
-function genId() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-}
-
-function loadFromStorage() {
+async function initApiToken() {
   try {
-    const saved = localStorage.getItem('voicebot_hub_bots');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed)) bots = parsed;
-    }
-    bots.forEach(b => {
-      if (!b.status) b.status = 'stopped';
-      if (!b.uptime) b.uptime = 0;
-      if (!b.logs) b.logs = [];
+    const res = await fetch('/api/ping_session.php', {
+      credentials: 'same-origin'
     });
-    const log = localStorage.getItem('voicebot_hub_log');
-    if (log) {
-      const parsedLog = JSON.parse(log);
-      if (Array.isArray(parsedLog)) activityLog = parsedLog;
+
+    const j = await res.json();
+
+    if (j && j.ok && j.token) {
+      window.__API_TOKEN = j.token;
     }
-  } catch(e) {}
-}
-
-function saveToStorage() {
-  try {
-    localStorage.setItem('voicebot_hub_bots', JSON.stringify(bots));
-    localStorage.setItem('voicebot_hub_log', JSON.stringify(activityLog.slice(0, 200)));
-  } catch(e) {}
-}
-
-// ============================================================
-//  DISCORD WEBSOCKET
-// ============================================================
-
-function createVoiceConnection(bot) {
-  const { token, guildId, channelId, selfMute, selfDeaf } = bot;
-  const id = bot.id;
-
-  if (wsConnections[id]) {
-    try { wsConnections[id].close(); } catch(_) {}
-    delete wsConnections[id];
-  }
-
-  return new Promise((resolve, reject) => {
-    const ws = new WebSocket('wss://gateway.discord.gg/?v=10&encoding=json');
-    let heartbeatInterval, heartbeatWatchdog, voiceStateKeepalive;
-    let isAuthenticated = false;
-    let lastHeartbeatAck = Date.now();
-    let resolved = false;
-
-    const connTimeout = setTimeout(() => {
-      try { ws.close(); } catch(_) {}
-      if (!resolved) reject(new Error('Connection timeout'));
-    }, 15000);
-
-    const sendVoiceState = () => {
-      try {
-        ws.send(JSON.stringify({
-          op: 4,
-          d: {
-            guild_id: guildId,
-            channel_id: channelId,
-            self_mute: String(selfMute) === 'true',
-            self_deaf: String(selfDeaf) === 'true'
-          }
-        }));
-      } catch(_) {}
-    };
-
-    ws.onopen = function() {};
-
-    ws.onmessage = function(event) {
-      try {
-        const data = JSON.parse(event.data);
-        const { op, d, t } = data;
-
-        if (op === 11) {
-          lastHeartbeatAck = Date.now();
-        }
-
-        if (op === 10) {
-          clearTimeout(connTimeout);
-          const interval = d.heartbeat_interval;
-          
-          heartbeatInterval = setInterval(() => {
-            try { ws.send(JSON.stringify({ op: 1, d: null })); } catch(_) {}
-          }, interval);
-          
-          heartbeatWatchdog = setInterval(() => {
-            if (Date.now() - lastHeartbeatAck > interval * 2.5) {
-              try { ws.close(4000); } catch(_) {}
-            }
-          }, interval);
-          
-          ws.send(JSON.stringify({
-            op: 2,
-            d: {
-              token: token,
-              properties: {
-                $os: 'linux',
-                $browser: 'discord.js',
-                $device: 'discord.js'
-              },
-              intents: 1 << 7
-            }
-          }));
-        }
-
-        if (op === 0 && t === 'READY') {
-          isAuthenticated = true;
-          wsConnections[id] = ws;
-          voiceStateKeepalive = setInterval(sendVoiceState, 4 * 60 * 1000);
-          sendVoiceState();
-          if (!resolved) {
-            resolved = true;
-            resolve(ws);
-          }
-        }
-
-        if (op === 0 && t === 'VOICE_STATE_UPDATE' && isAuthenticated) {
-          if (d?.guild_id === guildId && d.channel_id !== channelId) {
-            setTimeout(sendVoiceState, 800);
-          }
-        }
-
-        if (op === 7 || op === 9) {
-          try { ws.close(); } catch(_) {}
-          if (!resolved) reject(new Error('Token ไม่ถูกต้องหรือหมดอายุ'));
-        }
-      } catch(err) {}
-    };
-
-    ws.onclose = function(event) {
-      clearTimeout(connTimeout);
-      if (heartbeatInterval) clearInterval(heartbeatInterval);
-      if (heartbeatWatchdog) clearInterval(heartbeatWatchdog);
-      if (voiceStateKeepalive) clearInterval(voiceStateKeepalive);
-      delete wsConnections[id];
-      
-      if (bot.status === 'running') {
-        bot.status = 'stopped';
-        bot.uptime = 0;
-        addLog(bot, 'warn', '❌ การเชื่อมต่อหลุด (Code: ' + event.code + ')');
-        showToast(`${bot.name} หลุดจากการเชื่อมต่อ`, 'error');
-        renderBots();
-        saveToStorage();
-      }
-      
-      if (!resolved && event.code !== 1000) {
-        reject(new Error('Connection closed - Code: ' + event.code));
-      }
-    };
-
-    ws.onerror = function(error) {
-      if (!resolved) {
-        clearTimeout(connTimeout);
-        reject(error);
-      }
-    };
-  });
-}
-
-// ============================================================
-//  BOT ACTIONS
-// ============================================================
-
-async function startBot(id) {
-  const bot = bots.find(b => b.id === id);
-  if (!bot) return;
-  if (!bot.token || !bot.channelId || !bot.guildId) {
-    showToast('กรุณาตั้งค่า Token, Guild ID และ Channel ID ก่อน', 'error');
-    return;
-  }
-
-  bot.status = 'connecting';
-  renderBots();
-  addLog(bot, 'info', '🔄 กำลังเชื่อมต่อ Discord...');
-
-  try {
-    await createVoiceConnection(bot);
-    bot.status = 'running';
-    bot.startTime = Date.now();
-    bot.uptime = 0;
-    startUptimeCounter(id);
-    addLog(bot, 'ok', `✅ เชื่อมต่อสำเร็จ! เข้าช่องเสียง ${bot.channelId}`);
-    addActivity('join', `${bot.name} เข้าช่องเสียง`, bot.channelId);
-    showToast(`${bot.name} เชื่อมต่อสำเร็จ! ✅`, 'success');
   } catch (err) {
-    bot.status = 'stopped';
-    addLog(bot, 'err', `❌ เชื่อมต่อล้มเหลว: ${err.message}`);
-    showToast(`เชื่อมต่อ ${bot.name} ล้มเหลว: ${err.message}`, 'error');
+    console.warn("initApiToken() error:", err);
   }
 
-  renderBots();
-  saveToStorage();
-}
-
-function stopBot(id) {
-  const bot = bots.find(b => b.id === id);
-  if (!bot) return;
-  
-  clearInterval(uptimeIntervals[id]);
-  delete uptimeIntervals[id];
-  
-  if (wsConnections[id]) {
-    try { wsConnections[id].close(1000, 'User stopped'); } catch(_) {}
-    delete wsConnections[id];
-  }
-  
-  bot.status = 'stopped';
-  bot.uptime = 0;
-  addLog(bot, 'warn', '⏹ ออกจากช่องเสียงแล้ว');
-  addActivity('leave', `${bot.name} ออกจากช่องเสียง`, bot.channelId || '-');
-  showToast(`${bot.name} หยุดทำงานแล้ว`, 'info');
-  
-  renderBots();
-  saveToStorage();
-}
-
-function startUptimeCounter(id) {
-  uptimeIntervals[id] = setInterval(() => {
-    const bot = bots.find(b => b.id === id);
-    if (!bot || bot.status !== 'running') {
-      clearInterval(uptimeIntervals[id]);
-      return;
-    }
-    bot.uptime = Math.floor((Date.now() - bot.startTime) / 1000);
-    const el = document.querySelector(`#bot-card-${id} .bot-uptime`);
-    if (el) el.textContent = '⏱ ' + formatUptime(bot.uptime);
-  }, 1000);
-}
-
-function startAllBots() {
-  const stopped = bots.filter(b => b.status === 'stopped');
-  if (stopped.length === 0) { showToast('ไม่มีบอทที่ต้องเริ่ม', 'info'); return; }
-  stopped.forEach((b, i) => setTimeout(() => startBot(b.id), i * 400));
-}
-
-function stopAllBots() {
-  const running = bots.filter(b => b.status === 'running');
-  if (running.length === 0) { showToast('ไม่มีบอทที่กำลังทำงาน', 'info'); return; }
-  running.forEach(b => stopBot(b.id));
-}
-
-// ============================================================
-//  RENDER
-// ============================================================
-
-function getInitials(name) {
-  if (!name) return '??';
-  return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-}
-
-function maskToken(token) {
-  if (!token) return '-';
-  if (token.length < 12) return '••••••••';
-  return token.slice(0, 8) + '•'.repeat(10) + token.slice(-4);
-}
-
-function formatUptime(s) {
-  if (!s || s < 0) return '0วิ';
-  if (s < 60) return s + 'วิ';
-  if (s < 3600) return Math.floor(s/60) + 'น.';
-  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60);
-  return h + 'ชม.' + (m ? m + 'น.' : '');
-}
-
-function stringToColor(str) {
-  if (!str) return '#7c6ff7';
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  const colors = ['#7c6ff7','#5b8af0','#3dd68c','#f5a623','#f25656','#c471ed','#44b3f8'];
-  return colors[Math.abs(hash) % colors.length];
-}
-
-function escHtml(s) {
-  if (!s) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function renderBots() {
-  const grid = document.getElementById('bots-grid');
-  const empty = document.getElementById('empty-state');
-  updateStats();
-
-  if (bots.length === 0) {
-    empty.style.display = '';
-    grid.innerHTML = '';
-    grid.appendChild(empty);
-    return;
-  }
-  empty.style.display = 'none';
-
-  const cards = bots.map(bot => {
-    const statusClass = bot.status || 'stopped';
-    const statusLabel = { running: '🟢 ออนไลน์', stopped: '⚫ หยุด', connecting: '🟡 กำลังเชื่อมต่อ' }[statusClass] || 'หยุด';
-    const initials = getInitials(bot.name);
-    const dotClass = { running: 'online', stopped: 'offline', connecting: 'connecting' }[statusClass];
-    const uptime = bot.uptime > 0 ? formatUptime(bot.uptime) : null;
-
-    return `
-    <div class="bot-card ${statusClass}" id="bot-card-${bot.id}">
-      <div class="bot-header">
-        <div class="bot-avatar" style="background:${stringToColor(bot.name)}">
-          ${initials}
-          <div class="status-dot ${dotClass}"></div>
-        </div>
-        <div class="bot-info">
-          <div class="bot-name">${escHtml(bot.name)}</div>
-          <div class="bot-id">${bot.guildId ? 'Guild: ' + bot.guildId : 'ยังไม่ได้ตั้งค่า'}</div>
-        </div>
-        <div class="status-badge ${statusClass}">
-          <div class="dot ${statusClass === 'connecting' ? 'pulse' : ''}"></div>
-          ${statusLabel}
-        </div>
-      </div>
-
-      <div class="bot-fields">
-        <div class="bot-field">
-          <div class="bot-field-label">🔑 Token</div>
-          <div class="bot-field-value token">${maskToken(bot.token)}</div>
-        </div>
-        <div class="bot-field">
-          <div class="bot-field-label">🔊 Voice Channel</div>
-          <div class="bot-field-value">${bot.channelId || 'ยังไม่ได้ระบุ'}</div>
-        </div>
-        <div class="bot-field">
-          <div class="bot-field-label">🔇 Mute</div>
-          <div class="bot-field-value">${bot.selfMute === 'false' ? 'เปิดเสียง' : 'ปิดเสียง'}</div>
-        </div>
-        <div class="bot-field">
-          <div class="bot-field-label">🔊 Deaf</div>
-          <div class="bot-field-value">${bot.selfDeaf === 'false' ? 'ไม่ปิด' : 'ปิดหูฟัง'}</div>
-        </div>
-      </div>
-
-      <div class="bot-actions">
-        ${statusClass === 'running'
-          ? `<button class="btn btn-danger btn-sm" onclick="stopBot('${bot.id}')"><i class="ti ti-player-stop"></i> หยุด</button>`
-          : statusClass === 'connecting'
-          ? `<button class="btn btn-outline btn-sm" disabled style="opacity:0.5"><i class="ti ti-loader-2"></i> กำลังเชื่อมต่อ...</button>`
-          : `<button class="btn btn-success btn-sm" onclick="startBot('${bot.id}')"><i class="ti ti-player-play"></i> เริ่ม</button>`}
-        <button class="btn btn-outline btn-sm" onclick="editBot('${bot.id}')"><i class="ti ti-edit"></i> แก้ไข</button>
-        ${uptime ? `<div class="bot-uptime">⏱ ${uptime}</div>` : ''}
-        <button class="btn btn-outline btn-sm" onclick="confirmDelete('${bot.id}')" style="margin-left:auto;color:var(--red);border-color:var(--red-glow)"><i class="ti ti-trash"></i></button>
-      </div>
-    </div>`;
-  }).join('');
-
-  grid.innerHTML = cards;
-}
-
-function updateStats() {
-  const total = bots.length;
-  const online = bots.filter(b => b.status === 'running').length;
-  const connecting = bots.filter(b => b.status === 'connecting').length;
-  const stopped = bots.filter(b => b.status === 'stopped').length;
-  document.getElementById('stat-total').textContent = total;
-  document.getElementById('stat-online').textContent = online;
-  document.getElementById('stat-connecting').textContent = connecting;
-  document.getElementById('stat-stopped').textContent = stopped;
-  document.getElementById('nav-online-count').textContent = online;
-}
-
-// ============================================================
-//  MODAL
-// ============================================================
-
-let currentTab = 'bot';
-
-function openAddModal() {
-  editingId = null;
-  document.getElementById('modal-title').textContent = 'เพิ่มบอทใหม่';
-  document.getElementById('save-btn-label').textContent = 'เพิ่มบอท';
-  clearForm();
-  switchTab('bot');
-  document.getElementById('bot-modal').classList.add('open');
-}
-
-function editBot(id) {
-  const bot = bots.find(b => b.id === id);
-  if (!bot) return;
-  editingId = id;
-  document.getElementById('modal-title').textContent = 'แก้ไขบอท';
-  document.getElementById('save-btn-label').textContent = 'บันทึก';
-  document.getElementById('bot-name-input').value = bot.name || '';
-  document.getElementById('bot-token-input').value = bot.token || '';
-  document.getElementById('bot-guild-input').value = bot.guildId || '';
-  document.getElementById('bot-channel-input').value = bot.channelId || '';
-  document.getElementById('bot-mute-input').value = bot.selfMute || 'true';
-  document.getElementById('bot-deaf-input').value = bot.selfDeaf || 'true';
-  switchTab('bot');
-  document.getElementById('bot-modal').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('bot-modal').classList.remove('open');
-}
-
-function clearForm() {
-  ['bot-name-input','bot-token-input','bot-guild-input','bot-channel-input'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('bot-mute-input').value = 'true';
-  document.getElementById('bot-deaf-input').value = 'true';
-}
-
-function switchTab(tab) {
-  currentTab = tab;
-  document.getElementById('tab-bot').style.display = tab === 'bot' ? '' : 'none';
-  document.getElementById('tab-channel').style.display = tab === 'channel' ? '' : 'none';
-  document.querySelectorAll('.tabs .tab').forEach((el, i) => {
-    el.classList.toggle('active', (i === 0 && tab === 'bot') || (i === 1 && tab === 'channel'));
-  });
-}
-
-function saveBot() {
-  const name = document.getElementById('bot-name-input').value.trim();
-  const token = document.getElementById('bot-token-input').value.trim();
-  const guildId = document.getElementById('bot-guild-input').value.trim();
-  const channelId = document.getElementById('bot-channel-input').value.trim();
-  const selfMute = document.getElementById('bot-mute-input').value;
-  const selfDeaf = document.getElementById('bot-deaf-input').value;
-
-  if (!name) { showToast('กรุณาใส่ชื่อบอท', 'error'); return; }
-  if (!token) { showToast('กรุณาใส่ Bot Token', 'error'); return; }
-  if (!guildId) { showToast('กรุณาใส่ Server ID', 'error'); return; }
-  if (!channelId) { showToast('กรุณาใส่ Voice Channel ID', 'error'); return; }
-
-  if (editingId) {
-    const bot = bots.find(b => b.id === editingId);
-    if (bot) {
-      if (bot.status === 'running') stopBot(bot.id);
-      Object.assign(bot, { name, token, guildId, channelId, selfMute, selfDeaf });
-    }
-    showToast(`แก้ไข ${name} แล้ว`, 'success');
-  } else {
-    const bot = {
-      id: genId(),
-      name,
-      token,
-      guildId,
-      channelId,
-      selfMute,
-      selfDeaf,
-      status: 'stopped',
-      uptime: 0,
-      logs: []
-    };
-    bots.push(bot);
-    showToast(`เพิ่ม ${name} แล้ว! 🎉`, 'success');
-    addActivity('info', `เพิ่มบอทใหม่ ${name}`);
-  }
-
-  saveToStorage();
-  closeModal();
-  renderBots();
-}
-
-// ============================================================
-//  DELETE
-// ============================================================
-
-function confirmDelete(id) {
-  const bot = bots.find(b => b.id === id);
-  confirmCallback = () => deleteBot(id);
-  document.getElementById('confirm-title').textContent = 'ยืนยันการลบ';
-  document.getElementById('confirm-msg').textContent = `คุณต้องการลบบอท "${bot?.name}" ใช่หรือไม่?`;
-  document.getElementById('confirm-dialog').classList.add('open');
-}
-
-function closeConfirm() {
-  document.getElementById('confirm-dialog').classList.remove('open');
-  confirmCallback = null;
-}
-
-function confirmOk() {
-  if (confirmCallback) confirmCallback();
-  closeConfirm();
-}
-
-function deleteBot(id) {
-  const bot = bots.find(b => b.id === id);
-  if (!bot) return;
-  if (bot.status === 'running') stopBot(id);
-  bots = bots.filter(b => b.id !== id);
-  showToast(`ลบ ${bot.name} แล้ว`, 'info');
-  addActivity('info', `ลบบอท ${bot.name}`);
-  saveToStorage();
-  renderBots();
-}
-
-// ============================================================
-//  ACTIVITY LOG
-// ============================================================
-
-function addActivity(type, detail, extra) {
-  activityLog.unshift({
-    time: new Date().toLocaleString('th-TH'),
-    type,
-    detail,
-    extra: extra || ''
-  });
-  if (activityLog.length > 200) activityLog = activityLog.slice(0, 200);
-  document.getElementById('nav-log-count').textContent = activityLog.length;
-  saveToStorage();
-}
-
-function addLog(bot, type, msg) {
-  if (!bot.logs) bot.logs = [];
-  const time = new Date().toLocaleTimeString('th-TH');
-  bot.logs.unshift({ type, msg, time });
-  if (bot.logs.length > 20) bot.logs = bot.logs.slice(0, 20);
-}
-
-function clearLog() {
-  activityLog = [];
-  document.getElementById('nav-log-count').textContent = '0';
-  saveToStorage();
-  showToast('ล้างประวัติแล้ว', 'info');
-}
-
-// ============================================================
-//  TOAST
-// ============================================================
-
-function showToast(msg, type = 'info') {
-  const icons = { success: 'ti-circle-check', error: 'ti-alert-circle', info: 'ti-info-circle' };
-  const tc = document.getElementById('toast-container');
-  const el = document.createElement('div');
-  el.className = `toast ${type}`;
-  el.innerHTML = `<i class="ti ${icons[type] || 'ti-info-circle'}"></i><span>${escHtml(msg)}</span>`;
-  tc.appendChild(el);
-  setTimeout(() => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateX(40px)';
-    el.style.transition = 'all 0.3s';
-    setTimeout(() => el.remove(), 300);
-  }, 4000);
-}
-
-// ============================================================
-//  PAGE ROUTING
-// ============================================================
-
-function showPage(page) {
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  document.getElementById('nav-' + page)?.classList.add('active');
-
-  document.getElementById('bots-page').style.display = page === 'bots' ? 'block' : 'none';
-  document.getElementById('activity-page').style.display = page === 'activity' ? 'block' : 'none';
-  document.getElementById('settings-page').style.display = page === 'settings' ? 'block' : 'none';
-
-  const titles = {
-    bots: ['บอทของฉัน', 'จัดการบอท Discord Voice Channel ทั้งหมด'],
-    activity: ['ประวัติกิจกรรม', 'บันทึกการเชื่อมต่อและเหตุการณ์'],
-    settings: ['ตั้งค่า', 'กำหนดค่าระบบและความปลอดภัย']
-  };
-  document.getElementById('page-title').textContent = titles[page]?.[0] || 'บอทของฉัน';
-  document.getElementById('page-sub').textContent = titles[page]?.[1] || '';
-  document.getElementById('topbar-actions').style.display = page === 'bots' ? '' : 'none';
-  
-  if (page === 'activity') {
-    const body = document.getElementById('activity-log-body');
-    if (activityLog.length === 0) {
-      body.innerHTML = `<div style="text-align:center;padding:60px 24px;color:var(--text-muted);">
-        <i class="ti ti-file-description" style="font-size:40px;display:block;margin-bottom:12px;opacity:0.3"></i>
-        ยังไม่มีประวัติกิจกรรม
-      </div>`;
-    } else {
-      body.innerHTML = activityLog.slice(0, 50).map(l => `
-        <div class="log-row">
-          <div style="color:var(--text-muted);font-size:12px">${l.time}</div>
-          <div><span class="log-type-badge ${l.type}">${l.type}</span></div>
-          <div style="font-size:13px">${escHtml(l.detail)} ${l.extra ? `<span style="color:var(--text-muted)">· ${escHtml(l.extra)}</span>` : ''}</div>
-        </div>
-      `).join('');
-    }
-  }
-}
-
-// ============================================================
-//  SETTINGS
-// ============================================================
-
-function toggleLocalStorage(el) {
-  el.classList.toggle('on');
-  if (el.classList.contains('on')) {
-    saveToStorage();
-    showToast('✅ เปิดการบันทึกข้อมูล', 'success');
-  } else {
-    localStorage.removeItem('voicebot_hub_bots');
-    localStorage.removeItem('voicebot_hub_log');
-    showToast('⚠️ ปิดการบันทึกข้อมูล', 'info');
-  }
-}
-
-function exportData() {
-  const data = JSON.stringify({
-    bots: bots.map(b => ({ ...b, status: 'stopped', uptime: 0, logs: [] })),
-    exported: new Date().toISOString()
-  }, null, 2);
-  const a = document.createElement('a');
-  a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(data);
-  a.download = 'voicebot-hub-export.json';
-  a.click();
-  showToast('Export สำเร็จ!', 'success');
-}
-
-function importData(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
+  setInterval(async () => {
     try {
-      const data = JSON.parse(ev.target.result);
-      if (data.bots && Array.isArray(data.bots)) {
-        bots = data.bots.map(b => ({ ...b, status: 'stopped', uptime: 0, logs: [] }));
-        saveToStorage();
-        renderBots();
-        showToast(`Import สำเร็จ! พบ ${bots.length} บอท`, 'success');
+      const res = await fetch('/api/ping_session.php', {
+        credentials: 'same-origin'
+      });
+
+      const j = await res.json();
+      if (j && j.ok && j.token) {
+        window.__API_TOKEN = j.token;
       }
-    } catch {
-      showToast('ไฟล์ไม่ถูกต้อง', 'error');
+    } catch (err) {
+      console.warn("refresh token error:", err);
     }
-  };
-  reader.readAsText(file);
-  e.target.value = '';
+  }, 5 * 60 * 1000);
+
+  return true;
 }
 
-// ============================================================
-//  KEYBOARD SHORTCUTS
-// ============================================================
 
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    closeModal();
-    closeConfirm();
-  }
-});
-
-document.getElementById('bot-modal').addEventListener('click', function(e) {
-  if (e.target === document.getElementById('bot-modal')) closeModal();
-});
-
-document.getElementById('confirm-dialog').addEventListener('click', function(e) {
-  if (e.target === document.getElementById('confirm-dialog')) closeConfirm();
-});
-
-// ============================================================
-//  INIT
-// ============================================================
-
-loadFromStorage();
-renderBots();
-document.getElementById('nav-log-count').textContent = activityLog.length;
-
-if (typeof WebSocket !== 'undefined') {
-  document.getElementById('status-dot').className = 'dot online';
-  document.getElementById('status-text').textContent = 'พร้อมใช้งาน (WebSocket)';
-  document.getElementById('server-status').textContent = 'WebSocket Ready';
-} else {
-  showToast('❌ เบราว์เซอร์ไม่รองรับ WebSocket', 'error');
-}
 </script>
+
+<script>
+const allHeroes = ["Airi","Aleister","Alice","Allain","Amily","Annette","Aoi","Arduin","Arum","Astrid","Ata","Aya","Azzen Ka","Baldum","Bijan","Billow","Biron","Boltbaron","Bonnie","Bright","Butterfly","Capheny","Celica","Chalotte","Chaugnar","Cresht","D Arcy","Dextra","Diao Chan","Dirak","Dolia","Eland Orr","Elsu","Enzo","Erin","Errol","Fennik","Florentino","Flowborn","Gildur","Goverra","Grakk","Hayate","Heino","Helen","Iggy","Ignis","Ilumia","Ishar","Jinna","Kahlii","Kaine","Keera","Kil Groth","Kriknak","Krixi","Krizzix","Lauriel","Laville","Liliana","Lindis","Lorion","Lu Bu","Lumburr","Maloch","Marja","Max","Mganga","Mina","Ming","Moren","Mortos","Murad","Nakroth","Natalya","Omega","Omen","Ormarr","Paine","Preyta","Qi","Quillen","Raz","Riktor","Rouie","Rourke","Roxie","Ryoma","Sephera","Sinestrea","Skud","Slimz","Stuart","Superman","Taara","Tachi","TeeMee","Teeri","Tel Annas","Thane","The Flash","Thorne","Toro","Tulen","Valhein","Veera","Veres","Violet","Volkath","Wisp","Wonder Woman","Wukong","Xeniel","Y Bneth","Yan","Yena","Yorn","Yue","Zanis","Zata","Zephys","Zill","Zip","Zuka"];
+
+
+</script>
+
+
+
+
+<script src="/js/app_v2_1_20266_5.js?v=5"></script>
+<script src="/js/limit_skin.js?v=8"></script>
+<script>
+  
+
+const SORT_UPDATE_KEY = 'cat_sort_update_applied_v1';
+
+
+function showCategorySortUpdateAlert() {
+  if (localStorage.getItem(SORT_UPDATE_KEY)) return;
+
+  applyCategorySortUpdate();
+
+  // Swal.fire({
+  //   icon: 'info',
+  //   title: '📢 มีอัปเดตใหม่',
+  //   html: `
+  //     <div style="text-align:left;font-size:14px;line-height:1.6">
+  //       <b>เพิ่มฟีเจอร์ใหม่:</b><br>
+  //       • เรียงสกินตามหมวดหมู่ได้แล้ว 🎉<br><br>
+  //       เพื่อให้ระบบทำงานได้ถูกต้อง<br>
+  //       กรุณากดปุ่ม <b>อัปเดต</b> ด้านล่าง<br>
+  //       ระบบจะล้างข้อมูลเก่าและรีเฟรชหน้าเว็บ
+  //     </div>
+  //   `,
+  //   confirmButtonText: 'อัปเดต',
+  //   confirmButtonColor: '#6c63ff',
+  //   allowOutsideClick: false,
+  //   allowEscapeKey: false,
+  // }).then(result => {
+  //   if (result.isConfirmed) {
+  //     applyCategorySortUpdate();
+  //   }
+  // });
+}
+function applyCategorySortUpdate() {
+  try {
+    // 🔥 ลบ state builder (แก้ชื่อ key ให้ตรงของคุณ)
+    localStorage.removeItem(STORAGE_KEY);
+
+    // flag ว่าอัปเดตแล้ว
+    localStorage.setItem(SORT_UPDATE_KEY, '1');
+
+    // reload หน้าเว็บ
+    location.reload();
+  } catch (e) {
+    console.error('update failed', e);
+    location.reload();
+  }
+}
+document.addEventListener('DOMContentLoaded', () => {
+  showCategorySortUpdateAlert();
+});
+
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+<script src="/js/save_v32026.js?v=17"></script>
+<script>
+
+
+</script>
+
+<script src="/js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/promptparse"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/easyqrcodejs@4.4.13/dist/easy.qrcode.min.js"></script>
+
+<script src="/js/all8.js?v=5"></script>
+<script src="/js/patch.js?v=2"></script>
 </body>
 </html>
